@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOATRACE データポータル</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: radial-gradient(circle at 50% 0%, #122438 0%, #0b1219 60%);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #e0e6ed; min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 16px 60px;
+}
+.title { font-size: 32px; font-weight: 900; letter-spacing: 2px; color: #ffd166; text-align:center; }
+.subtitle { font-size: 13px; color: #6b7f95; margin-top: 6px; margin-bottom: 36px; text-align:center; letter-spacing:1px; }
+.grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; width:100%; max-width: 560px; }
+@media (max-width: 480px){ .grid{ grid-template-columns: 1fr; } .title{ font-size:26px; } }
+.card {
+  display:block; text-decoration:none; color:inherit;
+  background: linear-gradient(145deg, #16263a, #0f1d2c);
+  border:1px solid #24384f; border-radius: 16px;
+  padding: 22px 20px; transition: transform .15s, border-color .15s, box-shadow .15s;
+  position:relative; overflow:hidden;
+}
+.card:hover { transform: translateY(-3px); border-color:#3a5675; box-shadow:0 8px 24px rgba(0,0,0,.4); }
+.card .icon { font-size: 30px; margin-bottom: 10px; display:block; }
+.card .name { font-size: 18px; font-weight: 800; margin-bottom:4px; }
+.card .desc { font-size: 12px; color:#8faabe; line-height:1.5; }
+.card .badge { position:absolute; top:14px; right:14px; font-size:10px; padding:3px 8px; border-radius:10px; font-weight:700; }
+.badge-daily { background:#1b3a2a; color:#3fb950; border:1px solid #3fb95055; }
+.badge-static { background:#2a2540; color:#a371f7; border:1px solid #a371f755; }
+.c-players { border-top:3px solid #ffd166; }
+.c-racers { border-top:3px solid #58a6ff; }
+.c-motor { border-top:3px solid #3fb1c9; }
+.c-stadium { border-top:3px solid #f0883e; }
+.footer { margin-top:40px; font-size:11px; color:#4a6070; text-align:center; line-height:1.7; max-width:560px; }
+</style>
+</head>
+<body>
+  <div class="title">BOATRACE</div>
+  <div class="subtitle">DATA PORTAL ― 競艇予想データ集約</div>
+
+  <div class="grid">
+    <a class="card c-players" href="./players/">
+      <span class="badge badge-static">期別</span>
+      <span class="icon">🏆</span>
+      <div class="name">選手図鑑</div>
+      <div class="desc">全選手の勝率・コース別成績。実力で選手を引ける。半年に1回更新。</div>
+    </a>
+    <a class="card c-racers" href="./racers/">
+      <span class="badge badge-daily">毎日更新</span>
+      <span class="icon">📋</span>
+      <div class="name">今日の出走表</div>
+      <div class="desc">本日出走する選手の全国勝率・当地勝率つき。毎朝自動更新。</div>
+    </a>
+    <a class="card c-motor" href="./motor/">
+      <span class="badge badge-daily">毎日更新</span>
+      <span class="icon">⚙️</span>
+      <div class="name">モーター成績</div>
+      <div class="desc">全24場の今節のモーター機力(2連対率)。毎朝自動更新。</div>
+    </a>
+    <a class="card c-stadium" href="./stadium/">
+      <span class="badge badge-static">特性</span>
+      <span class="icon">🌊</span>
+      <div class="name">24場 特性＆荒れサイン</div>
+      <div class="desc">各場の1着率・水面特性・典型決着・荒れるサイン。</div>
+    </a>
+  </div>
+
+  <div class="footer">
+    競艇予想のためのデータポータル。データ提供：boatrace.jp 公式ほか。<br>
+    出走表・モーターは毎朝8時台に自動更新されます。
+  </div>
+</body>
+</html>
