@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>競艇モーター成績ビューワー</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>* { margin:0; padding:0; box-sizing:border-box; } body { background:#0b1219; font-family:'Helvetica Neue',Arial,sans-serif; color:#e0e6ed; }</style>
+</head>
+<body>
+<div id="root"></div>
+<script>window.__D = __DATA_PLACEHOLDER__;</script>
+<script type="text/babel">
+const { useState, useMemo } = React;
+const R = window.__D;
+function App() {
+  const [vf, setVf] = useState("ALL");
+  const [q, setQ] = useState("");
+  const [sc, setSc] = useState(null);
+  const [sd, setSd] = useState("desc");
+  const [showHelp, setShowHelp] = useState(false);
+  const cols = R.columns, venues = R.venues;
+  const filtered = useMemo(() => {
+    let rows = R.data;
+    const vi = cols.indexOf("場名");
+    if (vf !== "ALL" && vi >= 0) rows = rows.filter(r => r[vi] === vf);
+    if (q) { const s = q.toLowerCase(); rows = rows.filter(r => r.some(c => String(c).toLowerCase().includes(s))); }
+    if (sc !== null) rows = [...rows].sort((a, b) => { let va=a[sc],vb=b[sc]; const na=parseFloat(va),nb=parseFloat(vb); if(!isNaN(na)&&!isNaN(nb)){va=na;vb=nb;} return sd==="asc"?(va<vb?-1:va>vb?1:0):(va>vb?-1:va<vb?1:0); });
+    return rows;
+  }, [vf, q, sc, sd]);
+  const venueCount = useMemo(() => { const vi = cols.indexOf("場名"); return new Set(R.data.map(r => r[vi])).size; }, []);
+  return (
+    <div style={{minHeight:"100vh",padding:"12px"}}>
+      <div style={{display:"flex",alignItems:"baseline",gap:10,marginBottom:4,flexWrap:"wrap"}}>
+        <span style={{fontSize:20,fontWeight:800,color:"#ffd166"}}>BOATRACE モーター成績</span>
+        <span style={{fontSize:12,color:"#6b7f95"}}>{venueCount}場 / {R.data.length}件</span>
+      </div>
+      <div style={{fontSize:11,color:"#4a6070",marginBottom:8}}>最終更新: {R.updated || "-"}</div>
+      <button onClick={()=>setShowHelp(s=>!s)} style={{marginBottom:8,padding:"6px 12px",background:"#1a2738",color:"#8faabe",border:"1px solid #2a3d52",borderRadius:6,fontSize:12,cursor:"pointer",fontWeight:600}}>{showHelp ? "▲ 見方を閉じる" : "▼ このデータの見方"}</button>
+      {showHelp && (
+        <div style={{background:"#111d2b",border:"1px solid #1e2d3d",borderRadius:8,padding:"12px 14px",marginBottom:10,fontSize:12.5,lineHeight:1.7,color:"#c5d2e0"}}>
+          <div style={{color:"#ffd166",fontWeight:700,marginBottom:6}}>このデータについて</div>
+          <div style={{marginBottom:8}}>各場の<b style={{color:"#e0e6ed"}}>今節のモーター抽選結果</b>です。前検日に抽選が確定するため、同じ節の間は使用者は変わりません。</div>
+          <div style={{color:"#8faabe",fontWeight:700,marginBottom:4}}>各項目の意味</div>
+          <div style={{paddingLeft:4}}>
+            <div style={{marginBottom:4}}>・<b style={{color:"#e0e6ed"}}>選手名</b>＝今節そのモーターを使っている選手</div>
+            <div style={{marginBottom:4}}>・<b style={{color:"#e0e6ed"}}>モーター番号</b>＝各場のモーターに振られた固有番号</div>
+            <div style={{marginBottom:4}}>・<b style={{color:"#ffd166"}}>モーター2連対率</b>＝そのモーター自体の今期通算成績（％）。数字が高いほど機力が良い</div>
+            <div style={{marginBottom:4}}>・<b style={{color:"#e0e6ed"}}>級別</b>＝選手のランク（A1＞A2＞B1＞B2）</div>
+          </div>
+          <div style={{color:"#8faabe",fontWeight:700,margin:"8px 0 4px"}}>狙い目のヒント</div>
+          <div style={{paddingLeft:4,marginBottom:8}}>
+            <div style={{marginBottom:4}}>・2連対率はモーターの成績で、<b style={{color:"#e0e6ed"}}>選手の調子とは別物</b></div>
+            <div>・<b style={{color:"#79c0ff"}}>機力の高いモーターを下級（B級）の選手が引いている</b>と、人気が落ちて狙い目になることがある</div>
+          </div>
+          <div style={{fontSize:11,color:"#6b7f95",borderTop:"1px solid #1e2d3d",paddingTop:6}}>列見出しをタップで並び替え／場の絞り込み・選手名やモーター番号で検索ができます。データ提供：boatrace.jp 公式</div>
+        </div>
+      )}
+      <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+        <select value={vf} onChange={e=>setVf(e.target.value)} style={{padding:"6px",background:"#162232",color:"#e0e6ed",border:"1px solid #1e2d3d",borderRadius:4,fontSize:13}}>
+          <option value="ALL">全場</option>
+          {Object.entries(venues).map(([k,v])=><option key={k} value={v}>{v}</option>)}
+        </select>
+        <input placeholder="選手名・モーター番号で検索..." value={q} onChange={e=>setQ(e.target.value)} style={{flex:1,minWidth:120,padding:"6px 10px",background:"#162232",color:"#e0e6ed",border:"1px solid #1e2d3d",borderRadius:4,fontSize:13}}/>
+        <span style={{color:"#6b7f95",fontSize:12,alignSelf:"center"}}>{filtered.length}件</span>
+      </div>
+      <div style={{overflowX:"auto"}}>
+        <table style={{borderCollapse:"collapse",width:"100%",fontSize:12}}>
+          <thead><tr>{cols.map((c,i)=>(<th key={i} onClick={()=>{if(sc===i)setSd(d=>d==="asc"?"desc":"asc");else{setSc(i);setSd("desc");}}} style={{padding:"6px 8px",background:"#162232",color:"#8faabe",cursor:"pointer",whiteSpace:"nowrap",borderBottom:"2px solid #1e2d3d",textAlign:"left",position:"sticky",top:0,zIndex:1}}>{c}{sc===i?(sd==="asc"?" ▲":" ▼"):""}</th>))}</tr></thead>
+          <tbody>{filtered.map((row,ri)=>(<tr key={ri} style={{background:ri%2===0?"#0f1923":"#0b1219"}}>{row.map((cell,ci)=>(<td key={ci} style={{padding:"6px 8px",borderBottom:"1px solid #1a2535",whiteSpace:"nowrap"}}>{cell===""?"-":cell}</td>))}</tr>))}</tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script></body></html>
