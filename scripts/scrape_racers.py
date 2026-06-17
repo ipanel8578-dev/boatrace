@@ -65,11 +65,8 @@ def parse_racelist(html, jcd, venue, hd, rno):
                 name = txt
                 break
 
-        # 枠番: 最初のtdが 1〜6
+        # 枠番は後で出現順に振るため、ここでは仮置き
         waku = ""
-        first = tds[0].get_text(strip=True)
-        if first in ("1", "2", "3", "4", "5", "6"):
-            waku = first
 
         # F数/L数/平均ST
         f_match = re.search(r"F\s*(\d+)", tr_text)
@@ -114,6 +111,10 @@ def parse_racelist(html, jcd, venue, hd, rno):
             "当地勝率": toti[0], "当地2連率": toti[1], "当地3連率": toti[2],
         }
         records.append(rec)
+
+    # 枠番を出現順に振り直す（この関数は1レース分なので、出現順=枠順）
+    for i, rec in enumerate(records):
+        rec["枠"] = str(i + 1)
 
     return records
 
