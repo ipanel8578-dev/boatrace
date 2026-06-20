@@ -31,6 +31,8 @@ HEADERS = {
     "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
 }
 
+JST = datetime.timezone(datetime.timedelta(hours=9))
+
 OUTPUT_DIR = os.path.join("docs", "racers")
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_PATH = os.path.join(SCRIPT_DIR, "template_racers.html")
@@ -41,9 +43,22 @@ def cell_decimals(td):
     return re.findall(r"\d+\.\d+", td.get_text(" ", strip=True))
 
 
+def parse_deadlines(soup):
+    """ページ上部の「締切予定時刻」行から12レース分のHH:MMを返す"""
+    for tr in soup.find_all("tr"):
+        txt = tr.get_text(" ", strip=True)
+        if "締切予定時刻" in txt:
+            return re.findall(r"\d{1,2}:\d{2}", txt)[:12]
+    return []
+
+
 def parse_racelist(html, jcd, venue, hd, rno):
     soup = BeautifulSoup(html, "html.parser")
     records = []
+
+    # このレースの締切予定時刻（締切行の rno 番目）
+    deadlines = parse_deadlines(soup)
+    deadline = deadlines[rno - 1] if len(deadlines) >= rno else ""
 
     for tr in soup.find_all("tr"):
         tds = tr.find_all("td")
@@ -85,7 +100,14 @@ def parse_racelist(html, jcd, venue, hd, rno):
         zen = ["", "", ""]   # 全国 勝率/2連/3連
         toti = ["", "", ""]  # 当地 勝率/2連/3連
         avg_st = ""
+        shibu = home = age = ""  # 支部/出身地/年齢
         if info_idx is not None:
+            # 支部/出身/年齢: セル例「3388 / A1 今垣 光太郎 福井/石川 56歳/52.0kg」
+            # 空白は消さず、漢字ランの区切りとして使う（名前と支部が混ざるのを防ぐ）
+            info_text = tds[info_idx].get_text(" ", strip=True)
+            mm = re.search(r"([一-龥]+)\s*/\s*([一-龥]+)\s*(\d+)\s*歳", info_text)
+            if mm:
+                shibu, home, age = mm.group(1), mm.group(2), mm.group(3)
             # info_idx+1 = F/L/平均ST列, +2 = 全国, +3 = 当地 を期待
             if info_idx + 1 < len(tds):
                 fl_dec = cell_decimals(tds[info_idx + 1])
@@ -109,6 +131,7 @@ def parse_racelist(html, jcd, venue, hd, rno):
             "F数": f_num, "L数": l_num, "平均ST": avg_st,
             "全国勝率": zen[0], "全国2連率": zen[1], "全国3連率": zen[2],
             "当地勝率": toti[0], "当地2連率": toti[1], "当地3連率": toti[2],
+            "支部": shibu, "出身": home, "年齢": age, "締切時刻": deadline,
         }
         records.append(rec)
 
@@ -176,7 +199,7 @@ def main():
 
     cols = [str(c) for c in df.columns.tolist()]
     data = df.fillna("").values.tolist()
-    updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    updated = datetime.datetime.now(JST).strftime("%Y-%m-%d %H:%M")
     data_json = json.dumps(
         {"columns": cols, "data": data, "venues": dict(VENUES), "updated": updated},
         ensure_ascii=False, default=str,
