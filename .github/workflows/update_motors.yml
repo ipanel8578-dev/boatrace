@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: boatrace-data
+  group: boatrace-motors
   cancel-in-progress: false
 
 jobs:
