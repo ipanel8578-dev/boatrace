@@ -67,6 +67,15 @@
   .are-list li.pending{color:var(--muted);font-style:italic}
   .are-list li.pending .mk{color:var(--muted);font-style:normal}
   .are-note{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.55}
+  .psy{margin-top:9px;border-top:1px solid var(--line);padding-top:8px}
+  .psy summary{font-size:12px;color:var(--accent-dim);cursor:pointer;font-weight:700;list-style:none}
+  .psy summary::-webkit-details-marker{display:none}
+  .psy summary::before{content:"▸ ";color:var(--accent-dim)}
+  .psy[open] summary::before{content:"▾ "}
+  .psy-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+  .psy-list li{font-size:12px;color:var(--muted);line-height:1.55}
+  .psy-list li b{color:var(--ink)}
+  .psy-src{font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.5;font-style:italic}
   .boat{display:grid;grid-template-columns:44px 1fr;background:var(--panel);
     border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:9px;}
   .band{display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800}
@@ -270,7 +279,15 @@
       '<span class="are-count"><span class="n">'+sig.count+'</span>/'+sig.total+'</span></div>'+
       '<ul class="are-list">'+items+
       '<li class="pending"><span class="mk">—</span>天候（向かい風／強風／追い風）— 締切時刻＋風予報の連携後に点灯</li></ul>'+
-      '<div class="are-note">万舟が出やすい状況がいくつ揃ったかの目安です。点数・確率・買い目は出しません。判断はご自身で。</div>';
+      '<div class="are-note">万舟が出やすい状況がいくつ揃ったかの目安です。点数・確率・買い目は出しません。判断はご自身で。</div>'+
+      '<details class="psy"><summary>賭ける前に（自分の心理）</summary>'+
+        '<ul class="psy-list">'+
+          '<li><b>損失回避</b>：負けたあとほど、取り返そうとして大きく賭けがち。</li>'+
+          '<li><b>追い上げ</b>：負けが続くと賭け金を上げてしまう。各レースは独立で、前の負けはここでは取り返せない。</li>'+
+          '<li><b>サンクコスト</b>：「ここまで使ったから」は判断を歪める。今のレースだけで考える。</li>'+
+        '</ul>'+
+        '<div class="psy-src">出所：プロスペクト理論（Kahneman &amp; Tversky）。点数を絞る・決めた額を超えない、が長く付き合うコツ。</div>'+
+      '</details>';
   }
   function fmt(n,d){ return (n==null)?"–":n.toFixed(d); }
   function renderBoats(boats,sig){
