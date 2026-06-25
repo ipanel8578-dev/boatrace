@@ -3,9 +3,13 @@ name: モーターデータ自動更新
 
 on:
   schedule:
+    # 朝（JST 8:07 / 8:37 / 9:07）当日分
     - cron: '7 23 * * *'
     - cron: '37 23 * * *'
     - cron: '7 0 * * *'
+    # 夜（JST 22:50 / 23:20）翌日分の予習用（出走表より少し前に）
+    - cron: '50 13 * * *'
+    - cron: '20 14 * * *'
   workflow_dispatch:
 
 permissions:
