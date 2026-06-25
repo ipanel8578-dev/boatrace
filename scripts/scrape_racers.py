@@ -33,6 +33,15 @@ HEADERS = {
 
 JST = datetime.timezone(datetime.timedelta(hours=9))
 
+
+def target_date():
+    """対象とする開催日を返す。GitHub ActionsはUTCなのでJSTに直して判定する。
+    JSTで18時以降の夜の実行は翌日分を予習対象にする。日中の実行は当日分。"""
+    now = datetime.datetime.now(JST)
+    if now.hour >= 18:
+        return now.date() + datetime.timedelta(days=1)
+    return now.date()
+
 OUTPUT_DIR = os.path.join("docs", "racers")
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_PATH = os.path.join(SCRIPT_DIR, "template_racers.html")
@@ -161,7 +170,7 @@ def get_open_venues(hd):
 def find_open_date_and_scrape(jcd, venue):
     # 本日のみを対象にする。非開催場の前回/次節データを誤って拾わないため、
     # 過去日(-1等)や先の日付は探さない。本日のページに出走表が無ければ「開催なし」。
-    today = datetime.date.today()
+    today = target_date()
     candidates = [0]
     for sign in candidates:
         d = today + datetime.timedelta(days=sign)
@@ -201,7 +210,7 @@ def main():
     print("出走表スクレイパー v3 (自動実行)")
     print("実行日時:", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     print()
-    today_hd = datetime.date.today().strftime("%Y%m%d")
+    today_hd = target_date().strftime("%Y%m%d")
     open_venues = get_open_venues(today_hd)
     if open_venues:
         print("本日開催場: {} 場 ({})".format(len(open_venues), " ".join(sorted(open_venues))))
