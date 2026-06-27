@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>相性で選ぶ 住之江・女子戦</title>
+<style>
+:root{--bg:#0b1219;--card:#121d28;--card2:#16242f;--line:#22323f;--ink:#e8eef3;--sub:#8aa0b0;--gold:#ffd166;--rose:#ff7eb6;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 60px}
+header{text-align:center;padding:24px 0 8px}
+.kicker{font-size:11px;letter-spacing:.32em;color:var(--rose);font-weight:700}
+h1{font-size:23px;font-weight:800;margin-top:6px;letter-spacing:.02em}
+h1 .v{color:var(--gold)}
+.lead{font-size:12.5px;color:var(--sub);margin-top:8px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:18px}
+.panel h2{font-size:12px;letter-spacing:.16em;color:var(--sub);font-weight:700;margin-bottom:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+label{font-size:12px;color:var(--sub);display:block;margin-bottom:4px}
+input,select{background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:15px;width:100%;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--gold)}
+.f{flex:1;min-width:120px}
+.you{margin-top:12px;font-size:12.5px;color:var(--sub);text-align:center}
+.you b{color:var(--gold)}
+.races{margin-top:20px}
+.race{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:14px;overflow:hidden}
+.rhead{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:var(--card2);border-bottom:1px solid var(--line)}
+.rno{font-size:17px;font-weight:800}
+.rno span{color:var(--gold)}
+.dl{font-size:12px;color:var(--sub)}
+.list{padding:6px 10px 12px}
+.ent{display:flex;align-items:center;gap:11px;padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.04)}
+.ent:last-child{border-bottom:none}
+.rank{font-size:13px;font-weight:800;color:var(--sub);width:30px;text-align:center;flex-shrink:0}
+.ent.top1 .rank{color:var(--gold)}
+.waku{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.w1{background:#f4f4f4;color:#111}.w2{background:#1b1b1b;color:#fff;border:1px solid #444}
+.w3{background:#e23b3b;color:#fff}.w4{background:#2f7be2;color:#fff}
+.w5{background:#f1c40f;color:#111}.w6{background:#3ba55d;color:#fff}
+.nm{flex:1;min-width:0}
+.nm .kana{display:block;font-size:10px;color:var(--sub);letter-spacing:.04em;line-height:1.2;margin-bottom:1px}
+.nm .full{font-size:15px;font-weight:600}
+.sc{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;flex-shrink:0}
+.bar{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin-top:3px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px}
+
+.ent{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ent .nm{transition:color .15s}
+.ent.open{background:rgba(255,209,102,.04)}
+.chev{flex-shrink:0;color:var(--sub);font-size:11px;transition:transform .2s;margin-left:2px}
+.ent.open .chev{transform:rotate(90deg)}
+.prof{display:none;padding:2px 8px 14px 8px;background:rgba(0,0,0,.18);border-bottom:1px solid rgba(255,255,255,.04)}
+.prof.show{display:block}
+.rkbadge{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:5px;margin-right:8px}
+.rkA1{background:#e23b3b;color:#fff}.rkA2{background:#e67e22;color:#fff}.rkB1{background:#2f7be2;color:#fff}.rkB2{background:#4a5b68;color:#fff}
+.ptop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 4px 12px;font-size:12.5px;color:var(--sub)}
+.ptop b{color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cell{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:8px 6px;text-align:center}
+.cell .lb{font-size:9.5px;color:var(--sub);letter-spacing:.04em}
+.cell .vl{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:2px}
+.cell.hl .vl{color:var(--gold)}
+.cell .sub{font-size:9px;color:var(--sub);margin-top:1px}
+.c1wrap{margin-top:12px}
+.c1ttl{font-size:10px;color:var(--sub);letter-spacing:.1em;margin-bottom:7px}
+.c1row{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.c1lb{font-size:10px;color:var(--sub);width:26px;flex-shrink:0}
+.c1bar{flex:1;height:13px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.c1bar i{display:block;height:100%;border-radius:4px}
+.c1val{font-size:10px;color:var(--ink);width:38px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+.note{margin-top:24px;font-size:11px;color:var(--sub);line-height:1.7;text-align:center}
+.foot{margin-top:8px;font-size:10.5px;color:#5a6f7d;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="kicker">AISHO  BOAT  RACE</div>
+<h1>相性で選ぶ <span class="v">住之江・女子戦</span></h1>
+<p class="lead">血液型・星座・干支・生年月日の相性だけで、各レースの推し艇を並べます。<br>当たるかどうかは運。予想ではなく遊びです。</p>
+</header>
+
+<div class="panel">
+<h2>あなたの情報</h2>
+<div class="row">
+<div class="f"><label>生年月日</label><input type="date" id="bd" value="1989-12-21" min="1940-01-01" max="2010-12-31"></div>
+<div class="f" style="max-width:120px"><label>血液型</label><select id="bl"><option>B</option><option>A</option><option>O</option><option>AB</option></select></div>
+</div>
+<div class="you" id="you"></div>
+</div>
+
+<div class="races" id="races"></div>
+
+<p class="note">スコアは血液型25・星座25・干支25・生年月日×日付25の合計100点。<br>同じ選手でも出走レースと日付でわずかに点が動きます。</p>
+<p class="foot">対象：住之江 女子戦 全12R／入力はこの端末にだけ保存されます</p>
+</div>
+
+<script>
+const DATA=[{"no": 5052, "race": "1R", "waku": 1, "name": "赤井星璃菜", "kana": "アカイ セリナ", "birth": "平成7年5月13日", "blood": "B", "dl": "15:18", "rank": "B1", "branch": "大阪", "home": "大阪", "age": 31, "ht": 164, "wt": 51, "win": 4.47, "fuku": 2.35, "syutsu": 68, "w1": 8, "w2": 8, "yusyo": 0, "avgst": "0.16", "f": 0, "c1": [25.0, 0.0, 20.0, 23.1, 0.0, 0.0], "out": 12.5, "natl2": "28.81", "lcl": "2.86", "lcl2": "14.29"}, {"no": 5069, "race": "1R", "waku": 2, "name": "山崎小葉音", "kana": "ヤマザキ コハネ", "birth": "平成12年10月7日", "blood": "A", "dl": "15:18", "rank": "B1", "branch": "群馬", "home": "徳島", "age": 25, "ht": 148, "wt": 43, "win": 4.44, "fuku": 2.53, "syutsu": 71, "w1": 7, "w2": 11, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [40.0, 7.7, 12.5, 0.0, 0.0, 0.0], "out": 4.2, "natl2": "22.78", "lcl": "5.50", "lcl2": "62.50"}, {"no": 5367, "race": "1R", "waku": 3, "name": "赤松咲香", "kana": "アカマツ サヤカ", "birth": "平成14年2月14日", "blood": "B", "dl": "15:18", "rank": "B2", "branch": "徳島", "home": "高知", "age": 24, "ht": 156, "wt": 48, "win": 2.23, "fuku": 0.89, "syutsu": 56, "w1": 2, "w2": 3, "yusyo": 0, "avgst": "0.19", "f": 1, "c1": [null, null, null, 7.7, 6.2, 0.0], "out": 3.6, "natl2": "5.36", "lcl": "1.67", "lcl2": "0.00"}, {"no": 5334, "race": "1R", "waku": 4, "name": "樫葉新心", "kana": "カシバ ニコ", "birth": "平成16年7月7日", "blood": "B", "dl": "15:18", "rank": "B1", "branch": "徳島", "home": "徳島", "age": 21, "ht": 158, "wt": 46, "win": 3.14, "fuku": 1.25, "syutsu": 96, "w1": 4, "w2": 8, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [18.2, 0.0, 4.8, 0.0, 6.2, 0.0], "out": 2.9, "natl2": "6.12", "lcl": "1.35", "lcl2": "0.00"}, {"no": 5326, "race": "1R", "waku": 5, "name": "三嶌さらら", "kana": "ミシマ サララ", "birth": "平成15年10月16日", "blood": "B", "dl": "15:18", "rank": "B1", "branch": "香川", "home": "香川", "age": 22, "ht": 153, "wt": 47, "win": 4.55, "fuku": 2.52, "syutsu": 119, "w1": 14, "w2": 16, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [40.0, 9.1, 4.8, 9.5, 5.3, 9.5], "out": 7.3, "natl2": "33.87", "lcl": "1.86", "lcl2": "0.00"}, {"no": 5406, "race": "1R", "waku": 6, "name": "小畑楓夏", "kana": "オバタ フウカ", "birth": "平成16年9月1日", "blood": "A", "dl": "15:18", "rank": "B2", "branch": "山口", "home": "山口", "age": 21, "ht": 164, "wt": 57, "win": 1.39, "fuku": 0.0, "syutsu": 89, "w1": 0, "w2": 0, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [null, null, null, 0.0, 0.0, 0.0], "out": 0.0, "natl2": "0.00", "lcl": "0.00", "lcl2": "0.00"}, {"no": 4878, "race": "2R", "waku": 1, "name": "西岡育未", "kana": "ニシオカ イクミ", "birth": "平成6年11月22日", "blood": "B", "dl": "15:48", "rank": "B1", "branch": "徳島", "home": "徳島", "age": 31, "ht": 159, "wt": 47, "win": 4.35, "fuku": 1.97, "syutsu": 71, "w1": 5, "w2": 9, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [18.2, 8.3, 0.0, 12.5, 0.0, 0.0], "out": 4.2, "natl2": "22.22", "lcl": "0.00", "lcl2": "0.00"}, {"no": 3618, "race": "2R", "waku": 2, "name": "海野ゆかり", "kana": "ウンノ ユカリ", "birth": "昭和48年11月28日", "blood": "O", "dl": "15:48", "rank": "A1", "branch": "広島", "home": "広島", "age": 52, "ht": 164, "wt": 45, "win": 6.36, "fuku": 5.0, "syutsu": 122, "w1": 31, "w2": 30, "yusyo": 1, "avgst": "0.19", "f": 0, "c1": [60.7, 18.2, 33.3, 6.2, 6.7, 5.0], "out": 13.9, "natl2": "46.40", "lcl": "6.34", "lcl2": "48.28"}, {"no": 3474, "race": "2R", "waku": 3, "name": "松瀬弘美", "kana": "マツセ ヒロミ", "birth": "昭和45年6月18日", "blood": "A", "dl": "15:48", "rank": "B1", "branch": "静岡", "home": "静岡", "age": 56, "ht": 150, "wt": 46, "win": 4.6, "fuku": 2.8, "syutsu": 107, "w1": 11, "w2": 19, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [37.5, 19.0, 5.0, 0.0, 0.0, 0.0], "out": 1.4, "natl2": "23.08", "lcl": "6.44", "lcl2": "55.56"}, {"no": 5320, "race": "2R", "waku": 4, "name": "岩崎麗子", "kana": "イワザキ レイコ", "birth": "平成13年7月22日", "blood": "O", "dl": "15:48", "rank": "B1", "branch": "群馬", "home": "群馬", "age": 24, "ht": 157, "wt": 51, "win": 2.8, "fuku": 0.81, "syutsu": 86, "w1": 2, "w2": 5, "yusyo": 0, "avgst": "0.18", "f": 1, "c1": [9.1, 0.0, 5.9, 0.0, 0.0, 0.0], "out": 1.7, "natl2": "11.90", "lcl": "1.33", "lcl2": "0.00"}, {"no": 5439, "race": "2R", "waku": 5, "name": "志賀美優", "kana": "シガ ミユウ", "birth": "平成17年9月23日", "blood": "A", "dl": "15:48", "rank": "B2", "branch": "愛知", "home": "愛知", "age": 20, "ht": 154, "wt": 47, "win": 1.44, "fuku": 0.14, "syutsu": 71, "w1": 1, "w2": 0, "yusyo": 0, "avgst": "0.21", "f": 1, "c1": [null, null, null, null, null, 1.4], "out": 1.4, "natl2": "1.45", "lcl": "1.29", "lcl2": "0.00"}, {"no": 5437, "race": "2R", "waku": 6, "name": "中澤里桜", "kana": "ナカザワ リオ", "birth": "平成17年7月10日", "blood": "O", "dl": "15:48", "rank": "B2", "branch": "香川", "home": "香川", "age": 20, "ht": 159, "wt": 52, "win": 1.28, "fuku": 0.21, "syutsu": 46, "w1": 0, "w2": 1, "yusyo": 0, "avgst": "0.23", "f": 1, "c1": [null, null, null, null, null, 0.0], "out": 0.0, "natl2": "4.00", "lcl": "0.86", "lcl2": "0.00"}, {"no": 5148, "race": "3R", "waku": 1, "name": "松本怜", "kana": "マツモト レイ", "birth": "平成6年2月7日", "blood": "AB", "dl": "16:19", "rank": "B1", "branch": "福岡", "home": "福岡", "age": 32, "ht": 158, "wt": 47, "win": 5.53, "fuku": 3.23, "syutsu": 68, "w1": 10, "w2": 12, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [62.5, 15.4, 16.7, 7.1, 0.0, 0.0], "out": 6.4, "natl2": "33.33", "lcl": "6.20", "lcl2": "40.00"}, {"no": 5088, "race": "3R", "waku": 2, "name": "高憧四季", "kana": "タカハタ シキ", "birth": "平成11年11月10日", "blood": "B", "dl": "16:19", "rank": "A1", "branch": "大阪", "home": "大阪", "age": 26, "ht": 156, "wt": 45, "win": 6.85, "fuku": 5.35, "syutsu": 157, "w1": 61, "w2": 23, "yusyo": 2, "avgst": "0.15", "f": 0, "c1": [78.6, 42.1, 30.4, 20.8, 16.0, 16.7], "out": 20.8, "natl2": "51.37", "lcl": "7.25", "lcl2": "56.86"}, {"no": 4534, "race": "3R", "waku": 3, "name": "坂咲友理", "kana": "サカ サユリ", "birth": "平成1年9月26日", "blood": "A", "dl": "16:19", "rank": "B1", "branch": "大阪", "home": "奈良", "age": 36, "ht": 149, "wt": 46, "win": 3.87, "fuku": 2.23, "syutsu": 67, "w1": 4, "w2": 11, "yusyo": 0, "avgst": "0.21", "f": 0, "c1": [11.1, 8.3, 7.1, 7.7, 0.0, 0.0], "out": 4.3, "natl2": "24.29", "lcl": "4.35", "lcl2": "20.41"}, {"no": 4924, "race": "3R", "waku": 4, "name": "中北涼", "kana": "ナカキタ リョウ", "birth": "平成4年10月14日", "blood": "A", "dl": "16:19", "rank": "B1", "branch": "長崎", "home": "愛知", "age": 33, "ht": 148, "wt": 49, "win": 4.16, "fuku": 1.58, "syutsu": 101, "w1": 5, "w2": 11, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [23.1, 5.6, 5.3, 0.0, 0.0, 0.0], "out": 1.4, "natl2": "22.43", "lcl": "4.16", "lcl2": "21.05"}, {"no": 5365, "race": "3R", "waku": 5, "name": "石村日奈那", "kana": "イシムラ ヒナナ", "birth": "平成13年7月7日", "blood": "B", "dl": "16:19", "rank": "B1", "branch": "東京", "home": "東京", "age": 24, "ht": 155, "wt": 46, "win": 2.25, "fuku": 0.4, "syutsu": 75, "w1": 1, "w2": 2, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [null, null, null, 0.0, 0.0, 3.0], "out": 1.3, "natl2": "3.61", "lcl": "0.00", "lcl2": "0.00"}, {"no": 5444, "race": "3R", "waku": 6, "name": "林風音", "kana": "ハヤシ カザネ", "birth": "平成20年5月24日", "blood": "O", "dl": "16:19", "rank": "B2", "branch": "愛知", "home": "愛知", "age": 18, "ht": 155, "wt": 49, "win": 1.44, "fuku": 0.13, "syutsu": 73, "w1": 0, "w2": 1, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [null, null, null, null, null, 0.0], "out": 0.0, "natl2": "1.43", "lcl": "0.00", "lcl2": "0.00"}, {"no": 5250, "race": "4R", "waku": 1, "name": "嶋田有里", "kana": "シマダ ユウリ", "birth": "平成14年6月2日", "blood": "B", "dl": "17:06", "rank": "B1", "branch": "長崎", "home": "熊本", "age": 24, "ht": 164, "wt": 48, "win": 3.94, "fuku": 1.74, "syutsu": 86, "w1": 6, "w2": 9, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [40.0, 5.3, 6.7, 0.0, 0.0, 0.0], "out": 1.8, "natl2": "18.87", "lcl": "0.00", "lcl2": "0.00"}, {"no": 4050, "race": "4R", "waku": 2, "name": "田口節子", "kana": "タグチ セツコ", "birth": "昭和56年1月14日", "blood": "AB", "dl": "17:06", "rank": "A1", "branch": "岡山", "home": "岡山", "age": 45, "ht": 162, "wt": 46, "win": 6.66, "fuku": 4.86, "syutsu": 111, "w1": 29, "w2": 25, "yusyo": 0, "avgst": "0.15", "f": 0, "c1": [72.0, 25.0, 20.0, 5.9, 11.1, 5.0], "out": 10.0, "natl2": "47.24", "lcl": "8.22", "lcl2": "66.67"}, {"no": 5173, "race": "4R", "waku": 3, "name": "谷口佳蓮", "kana": "タニグチ カレン", "birth": "平成13年11月14日", "blood": "A", "dl": "17:06", "rank": "B1", "branch": "香川", "home": "愛媛", "age": 24, "ht": 158, "wt": 47, "win": 4.94, "fuku": 3.42, "syutsu": 108, "w1": 20, "w2": 17, "yusyo": 0, "avgst": "0.15", "f": 0, "c1": [64.7, 22.2, 11.1, 5.9, 10.5, 0.0], "out": 6.8, "natl2": "35.19", "lcl": "5.17", "lcl2": "21.74"}, {"no": 4874, "race": "4R", "waku": 4, "name": "池田奈津美", "kana": "イケダ ナツミ", "birth": "平成6年1月16日", "blood": "A", "dl": "17:06", "rank": "B1", "branch": "福岡", "home": "福岡", "age": 32, "ht": 162, "wt": 53, "win": 4.57, "fuku": 2.12, "syutsu": 94, "w1": 11, "w2": 9, "yusyo": 0, "avgst": "0.15", "f": 0, "c1": [23.5, 11.8, 4.5, 0.0, 0.0, null], "out": 3.8, "natl2": "27.72", "lcl": "4.86", "lcl2": "27.03"}, {"no": 4964, "race": "4R", "waku": 5, "name": "土屋南", "kana": "ツチヤ ミナミ", "birth": "平成9年1月26日", "blood": "A", "dl": "17:06", "rank": "A2", "branch": "岡山", "home": "岡山", "age": 29, "ht": 162, "wt": 48, "win": 5.52, "fuku": 3.54, "syutsu": 96, "w1": 18, "w2": 16, "yusyo": 0, "avgst": "0.15", "f": 0, "c1": [53.8, 21.1, 25.0, 10.5, 6.7, 0.0], "out": 10.9, "natl2": "38.18", "lcl": "6.67", "lcl2": "44.44"}, {"no": 5435, "race": "4R", "waku": 6, "name": "中西月輝", "kana": "ナカニシ ルナ", "birth": "平成17年4月28日", "blood": "O", "dl": "17:06", "rank": "B2", "branch": "広島", "home": "山口", "age": 21, "ht": 158, "wt": 48, "win": 1.25, "fuku": 0.0, "syutsu": 64, "w1": 0, "w2": 0, "yusyo": 0, "avgst": "0.22", "f": 1, "c1": [null, null, null, null, 0.0, 0.0], "out": 0.0, "natl2": "0.00", "lcl": "0.00", "lcl2": "0.00"}, {"no": 4372, "race": "5R", "waku": 1, "name": "原田佑実", "kana": "ハラダ ユミ", "birth": "昭和62年8月6日", "blood": "B", "dl": "17:31", "rank": "A2", "branch": "大阪", "home": "愛知", "age": 38, "ht": 160, "wt": 47, "win": 5.75, "fuku": 3.69, "syutsu": 84, "w1": 19, "w2": 12, "yusyo": 1, "avgst": "0.17", "f": 0, "c1": [72.2, 23.1, 7.1, 16.7, 0.0, 0.0], "out": 5.7, "natl2": "42.39", "lcl": "5.72", "lcl2": "40.63"}, {"no": 5151, "race": "5R", "waku": 2, "name": "山下奈緒", "kana": "ヤマシタ ナオ", "birth": "平成7年4月13日", "blood": "O", "dl": "17:31", "rank": "B1", "branch": "大阪", "home": "香川", "age": 31, "ht": 152, "wt": 48, "win": 4.41, "fuku": 1.86, "syutsu": 102, "w1": 7, "w2": 12, "yusyo": 0, "avgst": "0.23", "f": 0, "c1": [40.0, 10.0, 0.0, 0.0, 0.0, 7.7], "out": 1.4, "natl2": "21.88", "lcl": "3.25", "lcl2": "8.33"}, {"no": 5265, "race": "5R", "waku": 3, "name": "大廣咲季", "kana": "オオヒロ サキ", "birth": "平成11年11月22日", "blood": "O", "dl": "17:31", "rank": "B1", "branch": "香川", "home": "香川", "age": 26, "ht": 158, "wt": 47, "win": 3.47, "fuku": 1.41, "syutsu": 106, "w1": 9, "w2": 6, "yusyo": 0, "avgst": "0.15", "f": 0, "c1": [36.4, 0.0, 5.6, 15.0, 5.6, 0.0], "out": 6.8, "natl2": "12.15", "lcl": "2.22", "lcl2": "11.11"}, {"no": 5069, "race": "5R", "waku": 4, "name": "山崎小葉音", "kana": "ヤマザキ コハネ", "birth": "平成12年10月7日", "blood": "A", "dl": "17:31", "rank": "B1", "branch": "群馬", "home": "徳島", "age": 25, "ht": 148, "wt": 43, "win": 4.44, "fuku": 2.53, "syutsu": 71, "w1": 7, "w2": 11, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [40.0, 7.7, 12.5, 0.0, 0.0, 0.0], "out": 4.2, "natl2": "22.78", "lcl": "5.50", "lcl2": "62.50"}, {"no": 4853, "race": "5R", "waku": 5, "name": "前原哉", "kana": "マエハラ チカ", "birth": "平成7年1月23日", "blood": "O", "dl": "17:31", "rank": "B1", "branch": "岡山", "home": "岡山", "age": 31, "ht": 156, "wt": 45, "win": 3.96, "fuku": 1.86, "syutsu": 75, "w1": 7, "w2": 7, "yusyo": 0, "avgst": "0.22", "f": 1, "c1": [30.0, 0.0, 20.0, 10.0, 0.0, 0.0], "out": 7.5, "natl2": "18.52", "lcl": "5.85", "lcl2": "50.00"}, {"no": 4611, "race": "5R", "waku": 6, "name": "今井美亜", "kana": "イマイ ミア", "birth": "平成2年8月14日", "blood": "AB", "dl": "17:31", "rank": "A1", "branch": "福井", "home": "富山", "age": 35, "ht": 157, "wt": 47, "win": 6.53, "fuku": 4.74, "syutsu": 116, "w1": 34, "w2": 21, "yusyo": 1, "avgst": "0.15", "f": 0, "c1": [87.5, 21.1, 23.8, 0.0, 5.9, 20.0], "out": 12.3, "natl2": "40.37", "lcl": "6.00", "lcl2": "42.11"}, {"no": 3334, "race": "6R", "waku": 1, "name": "角ひとみ", "kana": "スミ ヒトミ", "birth": "昭和43年9月16日", "blood": "A", "dl": "17:56", "rank": "A2", "branch": "広島", "home": "広島", "age": 57, "ht": 160, "wt": 45, "win": 5.47, "fuku": 4.0, "syutsu": 135, "w1": 19, "w2": 35, "yusyo": 0, "avgst": "0.20", "f": 0, "c1": [51.6, 4.3, 9.1, 0.0, 0.0, 0.0], "out": 2.5, "natl2": "34.31", "lcl": "5.42", "lcl2": "26.32"}, {"no": 4347, "race": "6R", "waku": 2, "name": "魚谷香織", "kana": "ウオタニ カオリ", "birth": "昭和60年4月26日", "blood": "AB", "dl": "17:56", "rank": "A2", "branch": "福岡", "home": "山口", "age": 41, "ht": 154, "wt": 46, "win": 6.06, "fuku": 3.64, "syutsu": 107, "w1": 21, "w2": 18, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [58.3, 14.3, 21.4, 0.0, 5.3, 0.0], "out": 6.5, "natl2": "38.61", "lcl": "0.00", "lcl2": "0.00"}, {"no": 4940, "race": "6R", "waku": 3, "name": "白石有美", "kana": "シライシ アミ", "birth": "平成10年7月21日", "blood": "O", "dl": "17:56", "rank": "B2", "branch": "東京", "home": "東京", "age": 27, "ht": 163, "wt": 59, "win": 1.56, "fuku": 0.0, "syutsu": 9, "w1": 0, "w2": 0, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "out": 0.0, "natl2": "5.56", "lcl": "0.00", "lcl2": "0.00"}, {"no": 5163, "race": "6R", "waku": 4, "name": "清水愛海", "kana": "シミズ アミ", "birth": "平成11年11月23日", "blood": "O", "dl": "17:56", "rank": "A1", "branch": "山口", "home": "山口", "age": 26, "ht": 159, "wt": 46, "win": 6.4, "fuku": 5.0, "syutsu": 102, "w1": 30, "w2": 21, "yusyo": 1, "avgst": "0.16", "f": 1, "c1": [72.7, 16.7, 35.7, 8.7, 23.1, 11.1], "out": 17.6, "natl2": "42.71", "lcl": "4.20", "lcl2": "0.00"}, {"no": 3474, "race": "6R", "waku": 5, "name": "松瀬弘美", "kana": "マツセ ヒロミ", "birth": "昭和45年6月18日", "blood": "A", "dl": "17:56", "rank": "B1", "branch": "静岡", "home": "静岡", "age": 56, "ht": 150, "wt": 46, "win": 4.6, "fuku": 2.8, "syutsu": 107, "w1": 11, "w2": 19, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [37.5, 19.0, 5.0, 0.0, 0.0, 0.0], "out": 1.4, "natl2": "23.08", "lcl": "6.44", "lcl2": "55.56"}, {"no": 5367, "race": "6R", "waku": 6, "name": "赤松咲香", "kana": "アカマツ サヤカ", "birth": "平成14年2月14日", "blood": "B", "dl": "17:56", "rank": "B2", "branch": "徳島", "home": "高知", "age": 24, "ht": 156, "wt": 48, "win": 2.23, "fuku": 0.89, "syutsu": 56, "w1": 2, "w2": 3, "yusyo": 0, "avgst": "0.19", "f": 1, "c1": [null, null, null, 7.7, 6.2, 0.0], "out": 3.6, "natl2": "5.36", "lcl": "1.67", "lcl2": "0.00"}, {"no": 5241, "race": "7R", "waku": 1, "name": "門田栞", "kana": "カドタ シオリ", "birth": "平成12年7月9日", "blood": "A", "dl": "18:21", "rank": "B1", "branch": "香川", "home": "愛媛", "age": 25, "ht": 155, "wt": 51, "win": 4.76, "fuku": 2.69, "syutsu": 89, "w1": 8, "w2": 16, "yusyo": 0, "avgst": "0.18", "f": 1, "c1": [25.0, 0.0, 10.5, 10.0, 6.7, 5.0], "out": 7.8, "natl2": "30.21", "lcl": "4.11", "lcl2": "11.11"}, {"no": 4243, "race": "7R", "waku": 2, "name": "西村歩", "kana": "ニシムラ アユミ", "birth": "昭和60年12月20日", "blood": "AB", "dl": "18:21", "rank": "B1", "branch": "大阪", "home": "大阪", "age": 40, "ht": 165, "wt": 47, "win": 5.36, "fuku": 3.65, "syutsu": 115, "w1": 22, "w2": 20, "yusyo": 0, "avgst": "0.18", "f": 1, "c1": [59.1, 6.2, 26.1, 14.3, 0.0, 0.0], "out": 10.4, "natl2": "35.29", "lcl": "5.35", "lcl2": "32.50"}, {"no": 5281, "race": "7R", "waku": 3, "name": "井上遥妃", "kana": "イノウエ ハルヒ", "birth": "平成15年3月26日", "blood": "A", "dl": "18:21", "rank": "A1", "branch": "徳島", "home": "徳島", "age": 23, "ht": 158, "wt": 47, "win": 6.46, "fuku": 4.95, "syutsu": 113, "w1": 35, "w2": 21, "yusyo": 1, "avgst": "0.14", "f": 1, "c1": [81.0, 47.1, 16.7, 15.8, 14.3, 5.9], "out": 13.3, "natl2": "38.53", "lcl": "3.73", "lcl2": "7.69"}, {"no": 4938, "race": "7R", "waku": 4, "name": "小芦るり華", "kana": "オアシ ルリカ", "birth": "平成9年9月9日", "blood": "B", "dl": "18:21", "rank": "A1", "branch": "佐賀", "home": "佐賀", "age": 28, "ht": 162, "wt": 49, "win": 6.93, "fuku": 5.3, "syutsu": 132, "w1": 46, "w2": 24, "yusyo": 1, "avgst": "0.14", "f": 0, "c1": [75.9, 29.2, 47.8, 21.1, 9.1, 0.0], "out": 21.5, "natl2": "50.00", "lcl": "4.44", "lcl2": "22.22"}, {"no": 5334, "race": "7R", "waku": 5, "name": "樫葉新心", "kana": "カシバ ニコ", "birth": "平成16年7月7日", "blood": "B", "dl": "18:21", "rank": "B1", "branch": "徳島", "home": "徳島", "age": 21, "ht": 158, "wt": 46, "win": 3.14, "fuku": 1.25, "syutsu": 96, "w1": 4, "w2": 8, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [18.2, 0.0, 4.8, 0.0, 6.2, 0.0], "out": 2.9, "natl2": "6.12", "lcl": "1.35", "lcl2": "0.00"}, {"no": 5439, "race": "7R", "waku": 6, "name": "志賀美優", "kana": "シガ ミユウ", "birth": "平成17年9月23日", "blood": "A", "dl": "18:21", "rank": "B2", "branch": "愛知", "home": "愛知", "age": 20, "ht": 154, "wt": 47, "win": 1.44, "fuku": 0.14, "syutsu": 71, "w1": 1, "w2": 0, "yusyo": 0, "avgst": "0.21", "f": 1, "c1": [null, null, null, null, null, 1.4], "out": 1.4, "natl2": "1.45", "lcl": "1.29", "lcl2": "0.00"}, {"no": 5129, "race": "8R", "waku": 1, "name": "山口真喜子", "kana": "ヤマグチ マキコ", "birth": "平成9年3月20日", "blood": "A", "dl": "18:46", "rank": "A2", "branch": "長崎", "home": "長崎", "age": 29, "ht": 160, "wt": 48, "win": 5.64, "fuku": 3.75, "syutsu": 96, "w1": 19, "w2": 17, "yusyo": 0, "avgst": "0.17", "f": 1, "c1": [52.9, 21.4, 18.8, 18.8, 6.7, 0.0], "out": 10.8, "natl2": "34.86", "lcl": "6.82", "lcl2": "54.55"}, {"no": 4123, "race": "8R", "waku": 2, "name": "細川裕子", "kana": "ホソカワ ユウコ", "birth": "昭和56年12月11日", "blood": "O", "dl": "18:46", "rank": "A1", "branch": "愛知", "home": "愛知", "age": 44, "ht": 157, "wt": 48, "win": 6.48, "fuku": 4.55, "syutsu": 147, "w1": 35, "w2": 32, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [64.9, 8.7, 17.4, 4.5, 15.0, 4.5], "out": 10.3, "natl2": "50.00", "lcl": "6.21", "lcl2": "39.29"}, {"no": 5148, "race": "8R", "waku": 3, "name": "松本怜", "kana": "マツモト レイ", "birth": "平成6年2月7日", "blood": "AB", "dl": "18:46", "rank": "B1", "branch": "福岡", "home": "福岡", "age": 32, "ht": 158, "wt": 47, "win": 5.53, "fuku": 3.23, "syutsu": 68, "w1": 10, "w2": 12, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [62.5, 15.4, 16.7, 7.1, 0.0, 0.0], "out": 6.4, "natl2": "33.33", "lcl": "6.20", "lcl2": "40.00"}, {"no": 5052, "race": "8R", "waku": 4, "name": "赤井星璃菜", "kana": "アカイ セリナ", "birth": "平成7年5月13日", "blood": "B", "dl": "18:46", "rank": "B1", "branch": "大阪", "home": "大阪", "age": 31, "ht": 164, "wt": 51, "win": 4.47, "fuku": 2.35, "syutsu": 68, "w1": 8, "w2": 8, "yusyo": 0, "avgst": "0.16", "f": 0, "c1": [25.0, 0.0, 20.0, 23.1, 0.0, 0.0], "out": 12.5, "natl2": "28.81", "lcl": "2.86", "lcl2": "14.29"}, {"no": 5437, "race": "8R", "waku": 5, "name": "中澤里桜", "kana": "ナカザワ リオ", "birth": "平成17年7月10日", "blood": "O", "dl": "18:46", "rank": "B2", "branch": "香川", "home": "香川", "age": 20, "ht": 159, "wt": 52, "win": 1.28, "fuku": 0.21, "syutsu": 46, "w1": 0, "w2": 1, "yusyo": 0, "avgst": "0.23", "f": 1, "c1": [null, null, null, null, null, 0.0], "out": 0.0, "natl2": "4.00", "lcl": "0.86", "lcl2": "0.00"}, {"no": 4456, "race": "8R", "waku": 6, "name": "鎌倉涼", "kana": "カマクラ リョウ", "birth": "平成1年4月30日", "blood": "A", "dl": "18:46", "rank": "A1", "branch": "大阪", "home": "大阪", "age": 37, "ht": 158, "wt": 45, "win": 6.78, "fuku": 4.95, "syutsu": 103, "w1": 29, "w2": 22, "yusyo": 4, "avgst": "0.16", "f": 0, "c1": [77.8, 13.3, 25.0, 11.1, 0.0, 0.0], "out": 9.8, "natl2": "42.86", "lcl": "8.26", "lcl2": "84.21"}, {"no": 3618, "race": "9R", "waku": 1, "name": "海野ゆかり", "kana": "ウンノ ユカリ", "birth": "昭和48年11月28日", "blood": "O", "dl": "19:12", "rank": "A1", "branch": "広島", "home": "広島", "age": 52, "ht": 164, "wt": 45, "win": 6.36, "fuku": 5.0, "syutsu": 122, "w1": 31, "w2": 30, "yusyo": 1, "avgst": "0.19", "f": 0, "c1": [60.7, 18.2, 33.3, 6.2, 6.7, 5.0], "out": 13.9, "natl2": "46.40", "lcl": "6.34", "lcl2": "48.28"}, {"no": 5365, "race": "9R", "waku": 2, "name": "石村日奈那", "kana": "イシムラ ヒナナ", "birth": "平成13年7月7日", "blood": "B", "dl": "19:12", "rank": "B1", "branch": "東京", "home": "東京", "age": 24, "ht": 155, "wt": 46, "win": 2.25, "fuku": 0.4, "syutsu": 75, "w1": 1, "w2": 2, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [null, null, null, 0.0, 0.0, 3.0], "out": 1.3, "natl2": "3.61", "lcl": "0.00", "lcl2": "0.00"}, {"no": 4927, "race": "9R", "waku": 3, "name": "関野文", "kana": "セキノ アヤ", "birth": "平成5年11月1日", "blood": "O", "dl": "19:12", "rank": "A2", "branch": "大阪", "home": "大阪", "age": 32, "ht": 149, "wt": 45, "win": 5.53, "fuku": 3.45, "syutsu": 133, "w1": 25, "w2": 21, "yusyo": 0, "avgst": "0.16", "f": 0, "c1": [57.7, 20.8, 8.3, 4.8, 5.0, 5.6], "out": 6.0, "natl2": "35.54", "lcl": "7.43", "lcl2": "64.86"}, {"no": 5151, "race": "9R", "waku": 4, "name": "山下奈緒", "kana": "ヤマシタ ナオ", "birth": "平成7年4月13日", "blood": "O", "dl": "19:12", "rank": "B1", "branch": "大阪", "home": "香川", "age": 31, "ht": 152, "wt": 48, "win": 4.41, "fuku": 1.86, "syutsu": 102, "w1": 7, "w2": 12, "yusyo": 0, "avgst": "0.23", "f": 0, "c1": [40.0, 10.0, 0.0, 0.0, 0.0, 7.7], "out": 1.4, "natl2": "21.88", "lcl": "3.25", "lcl2": "8.33"}, {"no": 4050, "race": "9R", "waku": 5, "name": "田口節子", "kana": "タグチ セツコ", "birth": "昭和56年1月14日", "blood": "AB", "dl": "19:12", "rank": "A1", "branch": "岡山", "home": "岡山", "age": 45, "ht": 162, "wt": 46, "win": 6.66, "fuku": 4.86, "syutsu": 111, "w1": 29, "w2": 25, "yusyo": 0, "avgst": "0.15", "f": 0, "c1": [72.0, 25.0, 20.0, 5.9, 11.1, 5.0], "out": 10.0, "natl2": "47.24", "lcl": "8.22", "lcl2": "66.67"}, {"no": 5144, "race": "9R", "waku": 6, "name": "中尾彩香", "kana": "ナカオ サヤカ", "birth": "平成13年6月27日", "blood": "O", "dl": "19:12", "rank": "B1", "branch": "福岡", "home": "沖縄", "age": 25, "ht": 161, "wt": 48, "win": 5.43, "fuku": 4.03, "syutsu": 109, "w1": 17, "w2": 27, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [55.6, 5.6, 20.0, 0.0, 10.5, 0.0], "out": 8.2, "natl2": "35.92", "lcl": "6.80", "lcl2": "60.00"}, {"no": 5163, "race": "10R", "waku": 1, "name": "清水愛海", "kana": "シミズ アミ", "birth": "平成11年11月23日", "blood": "O", "dl": "19:38", "rank": "A1", "branch": "山口", "home": "山口", "age": 26, "ht": 159, "wt": 46, "win": 6.4, "fuku": 5.0, "syutsu": 102, "w1": 30, "w2": 21, "yusyo": 1, "avgst": "0.16", "f": 1, "c1": [72.7, 16.7, 35.7, 8.7, 23.1, 11.1], "out": 17.6, "natl2": "42.71", "lcl": "4.20", "lcl2": "0.00"}, {"no": 5326, "race": "10R", "waku": 2, "name": "三嶌さらら", "kana": "ミシマ サララ", "birth": "平成15年10月16日", "blood": "B", "dl": "19:38", "rank": "B1", "branch": "香川", "home": "香川", "age": 22, "ht": 153, "wt": 47, "win": 4.55, "fuku": 2.52, "syutsu": 119, "w1": 14, "w2": 16, "yusyo": 0, "avgst": "0.19", "f": 0, "c1": [40.0, 9.1, 4.8, 9.5, 5.3, 9.5], "out": 7.3, "natl2": "33.87", "lcl": "1.86", "lcl2": "0.00"}, {"no": 4994, "race": "10R", "waku": 3, "name": "山本梨菜", "kana": "ヤマモト リナ", "birth": "平成10年3月26日", "blood": "A", "dl": "19:38", "rank": "A2", "branch": "佐賀", "home": "佐賀", "age": 28, "ht": 163, "wt": 47, "win": 6.12, "fuku": 4.42, "syutsu": 104, "w1": 21, "w2": 25, "yusyo": 0, "avgst": "0.16", "f": 0, "c1": [60.9, 21.4, 5.0, 21.4, 0.0, 0.0], "out": 6.0, "natl2": "47.66", "lcl": "6.00", "lcl2": "40.00"}, {"no": 4014, "race": "10R", "waku": 4, "name": "片岡恵里", "kana": "カタオカ エリ", "birth": "昭和54年11月15日", "blood": "A", "dl": "19:38", "rank": "A2", "branch": "山口", "home": "岡山", "age": 46, "ht": 161, "wt": 49, "win": 5.6, "fuku": 4.02, "syutsu": 102, "w1": 20, "w2": 21, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [68.4, 12.5, 8.7, 11.1, 7.1, 0.0], "out": 7.5, "natl2": "37.17", "lcl": "5.90", "lcl2": "40.00"}, {"no": 3289, "race": "10R", "waku": 5, "name": "高橋淳美", "kana": "タカハシ アツミ", "birth": "昭和38年5月25日", "blood": "A", "dl": "19:38", "rank": "B2", "branch": "大阪", "home": "岡山", "age": 63, "ht": 154, "wt": 45, "win": 3.47, "fuku": 1.56, "syutsu": 51, "w1": 2, "w2": 6, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [0.0, 10.0, 0.0, 16.7, 0.0, 0.0], "out": 3.0, "natl2": "15.07", "lcl": "3.77", "lcl2": "10.71"}, {"no": 5320, "race": "10R", "waku": 6, "name": "岩崎麗子", "kana": "イワザキ レイコ", "birth": "平成13年7月22日", "blood": "O", "dl": "19:38", "rank": "B1", "branch": "群馬", "home": "群馬", "age": 24, "ht": 157, "wt": 51, "win": 2.8, "fuku": 0.81, "syutsu": 86, "w1": 2, "w2": 5, "yusyo": 0, "avgst": "0.18", "f": 1, "c1": [9.1, 0.0, 5.9, 0.0, 0.0, 0.0], "out": 1.7, "natl2": "11.90", "lcl": "1.33", "lcl2": "0.00"}, {"no": 4938, "race": "11R", "waku": 1, "name": "小芦るり華", "kana": "オアシ ルリカ", "birth": "平成9年9月9日", "blood": "B", "dl": "20:06", "rank": "A1", "branch": "佐賀", "home": "佐賀", "age": 28, "ht": 162, "wt": 49, "win": 6.93, "fuku": 5.3, "syutsu": 132, "w1": 46, "w2": 24, "yusyo": 1, "avgst": "0.14", "f": 0, "c1": [75.9, 29.2, 47.8, 21.1, 9.1, 0.0], "out": 21.5, "natl2": "50.00", "lcl": "4.44", "lcl2": "22.22"}, {"no": 4773, "race": "11R", "waku": 2, "name": "中川りな", "kana": "ナカガワ リナ", "birth": "平成5年7月8日", "blood": "B", "dl": "20:06", "rank": "A2", "branch": "福岡", "home": "福岡", "age": 32, "ht": 160, "wt": 41, "win": 5.76, "fuku": 3.85, "syutsu": 135, "w1": 26, "w2": 26, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [55.6, 10.5, 12.5, 9.5, 3.6, 18.8], "out": 10.1, "natl2": "42.22", "lcl": "5.47", "lcl2": "42.11"}, {"no": 4878, "race": "11R", "waku": 3, "name": "西岡育未", "kana": "ニシオカ イクミ", "birth": "平成6年11月22日", "blood": "B", "dl": "20:06", "rank": "B1", "branch": "徳島", "home": "徳島", "age": 31, "ht": 159, "wt": 47, "win": 4.35, "fuku": 1.97, "syutsu": 71, "w1": 5, "w2": 9, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [18.2, 8.3, 0.0, 12.5, 0.0, 0.0], "out": 4.2, "natl2": "22.22", "lcl": "0.00", "lcl2": "0.00"}, {"no": 5189, "race": "11R", "waku": 4, "name": "藤原早菜", "kana": "フジワラ サナ", "birth": "平成12年10月9日", "blood": "A", "dl": "20:06", "rank": "A2", "branch": "岡山", "home": "岡山", "age": 25, "ht": 159, "wt": 44, "win": 5.63, "fuku": 3.43, "syutsu": 131, "w1": 25, "w2": 20, "yusyo": 0, "avgst": "0.20", "f": 0, "c1": [54.5, 17.9, 27.8, 5.0, 8.0, 0.0], "out": 9.9, "natl2": "33.58", "lcl": "5.44", "lcl2": "31.25"}, {"no": 5088, "race": "11R", "waku": 5, "name": "高憧四季", "kana": "タカハタ シキ", "birth": "平成11年11月10日", "blood": "B", "dl": "20:06", "rank": "A1", "branch": "大阪", "home": "大阪", "age": 26, "ht": 156, "wt": 45, "win": 6.85, "fuku": 5.35, "syutsu": 157, "w1": 61, "w2": 23, "yusyo": 2, "avgst": "0.15", "f": 0, "c1": [78.6, 42.1, 30.4, 20.8, 16.0, 16.7], "out": 20.8, "natl2": "51.37", "lcl": "7.25", "lcl2": "56.86"}, {"no": 4940, "race": "11R", "waku": 6, "name": "白石有美", "kana": "シライシ アミ", "birth": "平成10年7月21日", "blood": "O", "dl": "20:06", "rank": "B2", "branch": "東京", "home": "東京", "age": 27, "ht": 163, "wt": 59, "win": 1.56, "fuku": 0.0, "syutsu": 9, "w1": 0, "w2": 0, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "out": 0.0, "natl2": "5.56", "lcl": "0.00", "lcl2": "0.00"}, {"no": 5281, "race": "12R", "waku": 1, "name": "井上遥妃", "kana": "イノウエ ハルヒ", "birth": "平成15年3月26日", "blood": "A", "dl": "20:37", "rank": "A1", "branch": "徳島", "home": "徳島", "age": 23, "ht": 158, "wt": 47, "win": 6.46, "fuku": 4.95, "syutsu": 113, "w1": 35, "w2": 21, "yusyo": 1, "avgst": "0.14", "f": 1, "c1": [81.0, 47.1, 16.7, 15.8, 14.3, 5.9], "out": 13.3, "natl2": "38.53", "lcl": "3.73", "lcl2": "7.69"}, {"no": 4924, "race": "12R", "waku": 2, "name": "中北涼", "kana": "ナカキタ リョウ", "birth": "平成4年10月14日", "blood": "A", "dl": "20:37", "rank": "B1", "branch": "長崎", "home": "愛知", "age": 33, "ht": 148, "wt": 49, "win": 4.16, "fuku": 1.58, "syutsu": 101, "w1": 5, "w2": 11, "yusyo": 0, "avgst": "0.17", "f": 0, "c1": [23.1, 5.6, 5.3, 0.0, 0.0, 0.0], "out": 1.4, "natl2": "22.43", "lcl": "4.16", "lcl2": "21.05"}, {"no": 4347, "race": "12R", "waku": 3, "name": "魚谷香織", "kana": "ウオタニ カオリ", "birth": "昭和60年4月26日", "blood": "AB", "dl": "20:37", "rank": "A2", "branch": "福岡", "home": "山口", "age": 41, "ht": 154, "wt": 46, "win": 6.06, "fuku": 3.64, "syutsu": 107, "w1": 21, "w2": 18, "yusyo": 0, "avgst": "0.18", "f": 0, "c1": [58.3, 14.3, 21.4, 0.0, 5.3, 0.0], "out": 6.5, "natl2": "38.61", "lcl": "0.00", "lcl2": "0.00"}, {"no": 4372, "race": "12R", "waku": 4, "name": "原田佑実", "kana": "ハラダ ユミ", "birth": "昭和62年8月6日", "blood": "B", "dl": "20:37", "rank": "A2", "branch": "大阪", "home": "愛知", "age": 38, "ht": 160, "wt": 47, "win": 5.75, "fuku": 3.69, "syutsu": 84, "w1": 19, "w2": 12, "yusyo": 1, "avgst": "0.17", "f": 0, "c1": [72.2, 23.1, 7.1, 16.7, 0.0, 0.0], "out": 5.7, "natl2": "42.39", "lcl": "5.72", "lcl2": "40.63"}, {"no": 5129, "race": "12R", "waku": 5, "name": "山口真喜子", "kana": "ヤマグチ マキコ", "birth": "平成9年3月20日", "blood": "A", "dl": "20:37", "rank": "A2", "branch": "長崎", "home": "長崎", "age": 29, "ht": 160, "wt": 48, "win": 5.64, "fuku": 3.75, "syutsu": 96, "w1": 19, "w2": 17, "yusyo": 0, "avgst": "0.17", "f": 1, "c1": [52.9, 21.4, 18.8, 18.8, 6.7, 0.0], "out": 10.8, "natl2": "34.86", "lcl": "6.82", "lcl2": "54.55"}, {"no": 5173, "race": "12R", "waku": 6, "name": "谷口佳蓮", "kana": "タニグチ カレン", "birth": "平成13年11月14日", "blood": "A", "dl": "20:37", "rank": "B1", "branch": "香川", "home": "愛媛", "age": 24, "ht": 158, "wt": 47, "win": 4.94, "fuku": 3.42, "syutsu": 108, "w1": 20, "w2": 17, "yusyo": 0, "avgst": "0.15", "f": 0, "c1": [64.7, 22.2, 11.1, 5.9, 10.5, 0.0], "out": 6.8, "natl2": "35.19", "lcl": "5.17", "lcl2": "21.74"}];
+const SEED=20260627;
+const ETO=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SANGO=[['申','子','辰'],['寅','午','戌'],['亥','卯','未'],['巳','酉','丑']].map(s=>new Set(s));
+const ROKUGO=[['子','丑'],['寅','亥'],['卯','戌'],['辰','酉'],['巳','申'],['午','未']].map(s=>s.join());
+const CHU={子:'午',午:'子',丑:'未',未:'丑',寅:'申',申:'寅',卯:'酉',酉:'卯',辰:'戌',戌:'辰',巳:'亥',亥:'巳'};
+const ELEM={おひつじ:'火',しし:'火',いて:'火',おうし:'地',おとめ:'地',やぎ:'地',ふたご:'風',てんびん:'風',みずがめ:'風',かに:'水',さそり:'水',うお:'水'};
+function eto(y){return ETO[((y-4)%12+12)%12];}
+function seiza(mo,d){
+ const z=[[1,20,'やぎ'],[2,19,'みずがめ'],[3,21,'うお'],[4,20,'おひつじ'],[5,21,'おうし'],[6,22,'ふたご'],[7,23,'かに'],[8,23,'しし'],[9,23,'おとめ'],[10,24,'てんびん'],[11,23,'さそり'],[12,22,'いて'],[12,31,'やぎ']];
+ for(const[em,ed,n]of z){if(mo<em||(mo==em&&d<=ed))return n;}return 'やぎ';
+}
+const BLOOD={'O,O':.7,'O,A':.8,'O,B':.85,'O,AB':.65,'A,A':.6,'A,B':.5,'A,AB':.75,'B,B':.7,'B,AB':.8,'AB,AB':.6};
+function bloodScore(a,b){return BLOOD[a+','+b]??BLOOD[b+','+a]??.5;}
+const WARE={昭和:1925,平成:1988,令和:2018};
+function parseBirth(s){
+ const m=s.match(/(昭和|平成|令和)(\d+)年(\d+)月(\d+)日/);
+ return[WARE[m[1]]+ +m[2],+m[3],+m[4]];
+}
+function score(me,p){
+ const[y,mo,d]=parseBirth(p.birth);
+ const sB=bloodScore(me.blood,p.blood)*25;
+ const pe=ELEM[seiza(mo,d)],meE=me.elem;
+ let sE;
+ if(pe===meE)sE=25;
+ else if((pe=='火'&&meE=='風')||(pe=='風'&&meE=='火')||(pe=='地'&&meE=='水')||(pe=='水'&&meE=='地'))sE=20;
+ else if((pe=='火'&&meE=='水')||(pe=='水'&&meE=='火')||(pe=='地'&&meE=='風')||(pe=='風'&&meE=='地'))sE=10;
+ else sE=15;
+ const pet=eto(y),pair=[pet,me.eto].sort().join();
+ let sT;
+ if(pet===me.eto)sT=18;
+ else if(SANGO.some(g=>g.has(pet)&&g.has(me.eto)))sT=25;
+ else if(ROKUGO.includes(pair))sT=23;
+ else if(CHU[me.eto]===pet)sT=5;
+ else sT=14;
+ const base=y*10000+mo*100+d;
+ const h=(base*31+SEED*17+p.no*7)%1000;
+ const sD=h/1000*25;
+ return Math.round(sB+sE+sT+sD);
+}
+function kana2hira(s){return (s||'').replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));}
+const WCLR=['','w1','w2','w3','w4','w5','w6'];
+const BARC=s=>s>=80?'#ffd166':s>=65?'#ff7eb6':s>=50?'#5f9fd6':'#6b7f8c';
+function me(){
+ const[Y,M,D]=document.getElementById('bd').value.split('-').map(Number);
+ return{y:Y,mo:M,d:D,blood:document.getElementById('bl').value,eto:eto(Y),elem:ELEM[seiza(M,D)]};
+}
+function render(){
+ const m=me();
+ try{localStorage.setItem('aisho_me',JSON.stringify({bd:document.getElementById('bd').value,bl:m.blood}));}catch(e){}
+ document.getElementById('you').innerHTML=`あなた：<b>${seiza(m.mo,m.d)}座</b>・<b>${m.eto}年</b>・<b>${m.blood}型</b>`;
+ const byrace={};
+ for(const p of DATA){(byrace[p.race]=byrace[p.race]||[]).push(p);}
+ const keys=Object.keys(byrace).sort((a,b)=>parseInt(a)-parseInt(b));
+ let h='';
+ for(const k of keys){
+  const arr=byrace[k].map(p=>({...p,sc:score(m,p)})).sort((a,b)=>b.sc-a.sc);
+  h+=`<div class="race"><div class="rhead"><div class="rno"><span>${k}</span></div><div class="dl">締切 ${arr[0].dl}</div></div><div class="list">`;
+  arr.forEach((p,i)=>{
+   h+=`<div class="ent ${i==0?'top1':''}" data-k="${k}" data-w="${p.waku}"><div class="rank">${i+1}位</div><div class="waku ${WCLR[p.waku]}">${p.waku}</div><div class="nm"><span class="kana">${kana2hira(p.kana)}</span><span class="full">${p.name}</span><div class="bar"><i style="width:${p.sc}%;background:${BARC(p.sc)}"></i></div></div><div class="sc">${p.sc}</div><div class="chev">▶</div></div><div class="prof" id="prof-${k}-${p.waku}"></div>`;
+  });
+  h+='</div></div>';
+ }
+ document.getElementById('races').innerHTML=h;
+}
+try{const s=JSON.parse(localStorage.getItem('aisho_me'));if(s){document.getElementById('bd').value=s.bd;document.getElementById('bl').value=s.bl;}}catch(e){}
+
+function profHTML(p){
+ const c1=(p.c1||[0,0,0,0,0,0]).map(v=>typeof v==='number'?v:0);
+ const cmax=Math.max(...c1,1);
+ const lbls=['1','2','3','4','5','6'];
+ let bars='';
+ c1.forEach((v,idx)=>{
+  const col=idx<2?'#ffd166':'#5f9fd6';
+  bars+=`<div class="c1row"><div class="c1lb">${lbls[idx]}号</div><div class="c1bar"><i style="width:${v/cmax*100}%;background:${col}"></i></div><div class="c1val">${v.toFixed(1)}%</div></div>`;
+ });
+ const localHi=parseFloat(p.lcl)>parseFloat(p.win);
+ return `<div class="ptop"><span class="rkbadge rk${p.rank}">${p.rank}</span><span><b>${p.branch}</b>支部 / ${p.home}出身 / <b>${p.age}</b>歳 / ${p.ht}cm ${p.wt}kg / <b>${p.blood}</b>型</span></div>
+ <div class="grid">
+  <div class="cell"><div class="lb">全国勝率</div><div class="vl">${p.win}</div></div>
+  <div class="cell ${localHi?'hl':''}"><div class="lb">当地勝率</div><div class="vl">${p.lcl}</div><div class="sub">${localHi?'当地↑':'\u00a0'}</div></div>
+  <div class="cell"><div class="lb">平均ST</div><div class="vl">${p.avgst}</div></div>
+  <div class="cell"><div class="lb">全国2連率</div><div class="vl">${p.natl2}<span style="font-size:10px">%</span></div></div>
+  <div class="cell"><div class="lb">当地2連率</div><div class="vl">${p.lcl2}<span style="font-size:10px">%</span></div></div>
+  <div class="cell"><div class="lb">F数</div><div class="vl">${p.f}</div></div>
+  <div class="cell"><div class="lb">出走</div><div class="vl">${p.syutsu}</div></div>
+  <div class="cell"><div class="lb">1着 / 2着</div><div class="vl" style="font-size:13px">${p.w1} / ${p.w2}</div></div>
+  <div class="cell"><div class="lb">優勝</div><div class="vl">${p.yusyo}</div></div>
+ </div>
+ <div class="c1wrap"><div class="c1ttl">コース別 1着率（黄=イン／青=アウト）</div>${bars}</div>`;
+}
+document.getElementById('races').addEventListener('click',e=>{
+ const ent=e.target.closest('.ent');
+ if(!ent)return;
+ const k=ent.dataset.k,w=ent.dataset.w;
+ const prof=document.getElementById('prof-'+k+'-'+w);
+ const open=ent.classList.toggle('open');
+ if(open){
+  const p=DATA.find(x=>x.race==k&&x.waku==+w);
+  if(prof&&!prof.dataset.filled){prof.innerHTML=profHTML(p);prof.dataset.filled='1';}
+  prof&&prof.classList.add('show');
+ }else{prof&&prof.classList.remove('show');}
+});
+
+document.getElementById('bd').addEventListener('change',render);
+document.getElementById('bl').addEventListener('change',render);
+render();
+</script>
+</body>
+</html>
