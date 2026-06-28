@@ -115,7 +115,10 @@ function App() {
               <div style={{display:"flex",alignItems:"center",padding:"14px 16px",gap:12}}>
                 <span style={{fontSize:13,fontWeight:800,padding:"4px 9px",borderRadius:8,background:RANK_BADGE[p.rank],color:"#fff",flexShrink:0}}>{p.rank}</span>
                 <div style={{minWidth:0,flex:1}}>
-                  {pf&&pf.tagline&&<div style={{display:"inline-block",fontSize:10,fontWeight:800,color:"#ffd166",background:"#ffd16618",border:"1px solid #ffd16640",borderRadius:5,padding:"1px 7px",marginBottom:3,letterSpacing:0.5}}>{pf.tagline}</div>}
+                  {pf&&(pf.tagline||pf.nickname)&&<div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:3}}>
+                    {pf.tagline&&<span style={{fontSize:10,fontWeight:800,color:"#ffd166",background:"#ffd16618",border:"1px solid #ffd16640",borderRadius:5,padding:"1px 7px",letterSpacing:0.5}}>{pf.tagline}</span>}
+                    {pf.nickname&&<span style={{fontSize:10,fontWeight:800,color:"#5ec8e6",background:"#5ec8e618",border:"1px solid #5ec8e640",borderRadius:5,padding:"1px 7px",letterSpacing:0.5}}>{pf.nickname}</span>}
+                  </div>}
                   <div style={{display:"flex",alignItems:"baseline",gap:8,flexWrap:"wrap"}}>
                     <span style={{fontSize:19,fontWeight:800,color:"#e8edf2"}}>{p.name}{p.female&&<span style={{color:"#ff7eb6",marginLeft:3,fontSize:15}}>♥</span>}</span>
                     <span style={{fontSize:13,color:"#6b7f95"}}>{p.branch}</span>
