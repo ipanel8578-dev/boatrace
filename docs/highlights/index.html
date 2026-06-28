@@ -53,6 +53,13 @@ h1{font-size:22px;font-weight:800;margin-top:4px}
 .mtr{font-size:10.5px;font-weight:700;padding:1px 5px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--sub);flex-shrink:0}
 .mtr.hi{color:#3aab5a;border-color:rgba(58,171,90,.5)}
 .mtr.lo{color:#ff8a7a;border-color:rgba(255,138,122,.45)}
+.mtr-legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);font-size:12px;color:var(--sub)}
+.mtr-legend.sym-legend{margin-top:8px}
+.mtr-leg-title{font-weight:700;color:var(--txt)}
+.mtr-leg-item{display:inline-flex;align-items:center;gap:4px}
+.mtr-leg-item .flag{margin-left:0}
+.mtr-leg-item .up{color:var(--acc);font-weight:800}
+.mtr-leg-note{flex-basis:100%;font-size:11px;opacity:.7;line-height:1.5}
 .stat{color:var(--sub);font-size:11.5px;margin-left:auto;text-align:right;white-space:nowrap}
 .stat .up{color:var(--acc);font-weight:800}
 .headline{margin-top:10px;font-size:13.5px;font-weight:800;color:var(--acc);line-height:1.45;display:flex;gap:6px;align-items:baseline}
@@ -102,6 +109,21 @@ h1{font-size:22px;font-weight:800;margin-top:4px}
   <div class="lead">
     出走表＋モーターのデータから<b>機械的に拾える条件だけ</b>を並べています。買い目・確率・勝者予想は出しません。
     展開文はコース別の役割（①逃げ／②差し／③④まくり）に沿った<b>複数の筋の併置</b>。最後の一歩は読み手が埋めてください。
+    <div class="mtr-legend">
+      <span class="mtr-leg-title">機バッジの枠色</span>
+      <span class="mtr-leg-item"><span class="mtr hi">機</span>場平均より上位</span>
+      <span class="mtr-leg-item"><span class="mtr">機</span>平均並み</span>
+      <span class="mtr-leg-item"><span class="mtr lo">機</span>場平均より下位</span>
+      <span class="mtr-leg-note">数字＝モーター番号／枠色＝モーター2連率がその日その場の平均±5%に対しどの位置か</span>
+    </div>
+    <div class="mtr-legend sym-legend">
+      <span class="mtr-leg-title">記号の見方</span>
+      <span class="mtr-leg-item"><span class="jimoto">地元</span>支部が開催場と同じ</span>
+      <span class="mtr-leg-item"><span class="flag fF">F</span>今節フライング持ち</span>
+      <span class="mtr-leg-item"><span class="flag fST">ST</span>平均STが鋭い（目安0.15以下）</span>
+      <span class="mtr-leg-item"><span class="up">▲</span>当地勝率が全国勝率より高い（その場を得意）</span>
+      <span class="mtr-leg-item"><span class="badge b-mid">波乱</span>荷れ条件の件数（4以上赤／2-3金／0-1灰）</span>
+    </div>
   </div>
 </header>
 
