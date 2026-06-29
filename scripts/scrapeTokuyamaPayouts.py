@@ -10,9 +10,9 @@ import urllib.request
 JCD = 18  # tokuyama
 BASE = "https://www.boatrace.jp/owpc/pc/race/raceresult"
 OUT = os.path.join("docs", "payouts", "tokuyamaPayouts.csv")
-SLEEP = 1.0  # seconds between requests
+SLEEP = 1.0
 
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) boatrace-data-collector"
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
 
 
 def fetch(hd, rno):
@@ -21,25 +21,42 @@ def fetch(hd, rno):
     for attempt in range(3):
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                return r.read().decode("utf-8", "ignore")
+                raw = r.read()
+                return raw.decode("utf-8", "ignore")
         except Exception:
             time.sleep(2.0)
     return None
 
 
-# 3連単の払戻金を抜く。行の構造: 3連単 | 1-2-3 | ¥12,340 | 人気
-PAT = re.compile(r"3\u9023\u5358.*?(\d-\d-\d).*?\uffe5([\d,]+)", re.S)
+# HTML実体参照を正規化
+def normalize(html):
+    html = html.replace("&yen;", "\uffe5").replace("&#165;", "\uffe5")
+    html = html.replace("\uff13", "3")  # 全角3 -> 半角
+    return html
+
+
+# 3連単: 「3連単」の後、最初に現れる X-X-X を組番、その後最初の数字列(>=3桁)を払戻とする
+COMBO = re.compile(r"3\u9023\u5358(.*?)(\d)-(\d)-(\d)(.*)", re.S)
+# 払戻金は ¥ 有無に関わらず、組番の後で最初に出る3桁以上の数字（カンマ込み）
+MONEY = re.compile(r"([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{3,})")
 
 
 def parse_payout(html):
     if html is None:
         return None
-    # 結果が無い日（未開催）は組番が出ない
-    m = PAT.search(html)
+    html = normalize(html)
+    m = COMBO.search(html)
     if not m:
         return None
-    combo = m.group(1)
-    yen = int(m.group(2).replace(",", ""))
+    combo = m.group(2) + "-" + m.group(3) + "-" + m.group(4)
+    after = m.group(5)
+    mm = MONEY.search(after)
+    if not mm:
+        return None
+    yen = int(mm.group(1).replace(",", ""))
+    # 妥当性: 100円以上(=最低配当ありうる) かつ 1000万未満
+    if yen < 100 or yen > 9999999:
+        return None
     return combo, yen
 
 
@@ -70,6 +87,9 @@ def main():
 
     d = start
     collected = 0
+    fetched_ok = 0      # HTMLが取れた回数
+    parse_fail = 0      # 取れたがパース失敗した回数
+    sample_dumped = False
     while d <= today:
         hd = d.strftime("%Y%m%d")
         for rno in range(1, 13):
@@ -77,11 +97,19 @@ def main():
                 continue
             html = fetch(hd, rno)
             time.sleep(SLEEP)
+            if html:
+                fetched_ok += 1
             res = parse_payout(html)
             if res is None:
-                # 1Rで結果なし＝その日は未開催の可能性が高い→残りRを飛ばす
-                if rno == 1:
-                    break
+                # 取れているのにパース不能な最初の1件だけHTML冒頭を出す
+                if html and not sample_dumped and ("3\u9023\u5358" in html):
+                    print("=== SAMPLE (3rentan found but parse failed) hd=%s rno=%d ===" % (hd, rno))
+                    idx = html.find("3\u9023\u5358")
+                    print(html[idx:idx + 300])
+                    print("=== END SAMPLE ===")
+                    sample_dumped = True
+                if html:
+                    parse_fail += 1
                 continue
             combo, yen = res
             writer.writerow([hd, rno, combo, yen])
@@ -90,7 +118,7 @@ def main():
         d += datetime.timedelta(days=1)
 
     out.close()
-    print("collected:", collected)
+    print("collected:", collected, "fetched_ok:", fetched_ok, "parse_fail:", parse_fail)
 
 
 if __name__ == "__main__":
