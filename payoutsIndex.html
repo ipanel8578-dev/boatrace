@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>徳山 R別万舟率 | データ攻め</title>
+<style>
+  :root{
+    --bg:#0b1219; --panel:#121c26; --panel2:#0f1822;
+    --line:#1e2c3a; --txt:#e6edf3; --sub:#8aa0b2;
+    --acc:#ffd166; --bar:#2b6cb0; --barHi:#e05b4b;
+    --c1:#ffffff;--c2:#222;--c3:#e05b4b;--c4:#2b6cb0;--c5:#ffd166;--c6:#3fb56b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--txt);
+    font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    line-height:1.6;padding:16px;max-width:760px;margin:0 auto;}
+  a{color:var(--acc);}
+  header{margin-bottom:16px;}
+  h1{font-size:1.25rem;color:var(--acc);}
+  .lead{color:var(--sub);font-size:.85rem;margin-top:4px;}
+
+  /* 特別企画 */
+  .feature{margin:16px 0 22px;}
+  .ftitle{font-size:.78rem;color:var(--acc);letter-spacing:.08em;
+    border-left:3px solid var(--acc);padding-left:8px;margin-bottom:10px;font-weight:700;}
+  .cards{display:flex;flex-direction:column;gap:12px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;}
+  .card h3{font-size:.9rem;margin-bottom:10px;color:var(--txt);}
+  .card .note{font-size:.72rem;color:var(--sub);margin-top:8px;}
+
+  /* 時間帯ランキング */
+  .rank{display:flex;align-items:center;gap:10px;padding:5px 0;}
+  .rank .pos{width:24px;height:24px;border-radius:50%;flex:none;display:flex;
+    align-items:center;justify-content:center;font-weight:700;font-size:.8rem;
+    background:var(--panel2);color:var(--sub);}
+  .rank.top1 .pos{background:var(--acc);color:#000;}
+  .rank .lab{flex:none;width:42px;font-weight:700;color:var(--acc);}
+  .rank .mini{flex:1;background:var(--panel2);border-radius:5px;height:14px;overflow:hidden;}
+  .rank .mini i{display:block;height:100%;background:var(--barHi);}
+  .rank .v{width:54px;text-align:right;font-variant-numeric:tabular-nums;font-size:.85rem;}
+
+  /* 対比 */
+  .vs{display:flex;gap:10px;}
+  .vs .col{flex:1;background:var(--panel2);border-radius:10px;padding:10px;text-align:center;}
+  .vs .col .k{font-size:.72rem;color:var(--sub);}
+  .vs .col .r{font-size:1.5rem;font-weight:800;}
+  .vs .calm .r{color:#3fb56b;}
+  .vs .wild .r{color:var(--barHi);}
+  .vs .col .s{font-size:.78rem;color:var(--sub);margin-top:2px;}
+
+  /* 最高配当 */
+  .pay{display:flex;align-items:baseline;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:.85rem;}
+  .pay:last-child{border-bottom:0;}
+  .pay .amt{color:var(--acc);font-weight:800;font-variant-numeric:tabular-nums;width:96px;flex:none;text-align:right;}
+  .pay .meta2{color:var(--sub);font-size:.78rem;}
+  .pay .combo{font-weight:700;letter-spacing:.05em;}
+
+  /* 枠別 */
+  .lanes{display:flex;flex-direction:column;gap:6px;}
+  .lane{display:flex;align-items:center;gap:10px;}
+  .lane .badge{width:22px;height:22px;border-radius:5px;flex:none;display:flex;
+    align-items:center;justify-content:center;font-weight:700;font-size:.78rem;border:1px solid var(--line);}
+  .lane .lbar{flex:1;background:var(--panel2);border-radius:5px;height:16px;overflow:hidden;}
+  .lane .lbar i{display:block;height:100%;}
+  .lane .lv{width:62px;text-align:right;font-size:.82rem;font-variant-numeric:tabular-nums;}
+
+  /* R別本体 */
+  .secttl{font-size:.95rem;color:var(--acc);margin:6px 0 10px;font-weight:700;}
+  .meta{background:var(--panel2);border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.8rem;color:var(--sub);}
+  .meta b{color:var(--txt);}
+  .rows{display:flex;flex-direction:column;gap:6px;}
+  .row{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .head{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;}
+  .rno{font-weight:700;width:42px;flex:none;color:var(--acc);}
+  .barwrap{flex:1;background:var(--panel2);border-radius:6px;height:22px;overflow:hidden;}
+  .bar{height:100%;border-radius:6px;background:var(--bar);transition:width .4s;}
+  .bar.hi{background:var(--barHi);}
+  .rate{width:62px;text-align:right;flex:none;font-variant-numeric:tabular-nums;font-weight:600;}
+  .detail{display:none;padding:0 12px 12px 64px;font-size:.82rem;color:var(--sub);}
+  .detail.open{display:block;}
+  .detail span{color:var(--txt);}
+  .legend{font-size:.78rem;color:var(--sub);margin-top:14px;}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:middle;margin:0 4px 0 10px;}
+  footer{margin-top:22px;font-size:.75rem;color:var(--sub);border-top:1px solid var(--line);padding-top:12px;}
+  .err{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;color:var(--sub);font-size:.85rem;}
+</style>
+</head>
+<body>
+<header>
+  <h1>徳山 R別 万舟率</h1>
+  <div class="lead">過去1年・3連単の実績だけで読む、徳山の荒れどころ。買い目は出しません。</div>
+</header>
+
+<div id="feature" class="feature" style="display:none">
+  <div class="ftitle">★ 特別企画 ─ 数字で読む徳山</div>
+  <div class="cards">
+    <div class="card" id="cardRank">
+      <h3>万舟が出やすい時間帯 TOP3</h3>
+      <div id="rankBody"></div>
+      <div class="note">R別の万舟率が高い順。荒れアワーの目安。</div>
+    </div>
+    <div class="card" id="cardVs">
+      <h3>堅実R vs 大荒れR</h3>
+      <div class="vs" id="vsBody"></div>
+    </div>
+    <div class="card" id="cardTop">
+      <h3>過去1年の高配当レース TOP5</h3>
+      <div id="topBody"></div>
+    </div>
+    <div class="card" id="cardLane">
+      <h3>荒れたとき、どの枠が飛び込む？</h3>
+      <div class="lanes" id="laneBody"></div>
+      <div class="note">万舟（10,000円超）になったレースの1着枠の内訳。枠カラーは公式準拠。</div>
+    </div>
+  </div>
+</div>
+
+<div class="secttl">R別 万舟率（全レース）</div>
+<div id="meta" class="meta">読み込み中…</div>
+<div id="rows" class="rows"></div>
+
+<div class="legend">
+  <i style="background:var(--bar)"></i>通常
+  <i style="background:var(--barHi)"></i>全体平均より高い（荒れやすい）
+</div>
+
+<footer>
+  出典: BOAT RACE オフィシャルウェブサイト 競走成績（過去1年・3連単）。<br>
+  これは過去実績の集計であり、買い目・予想ではありません。将来の結果を保証するものではありません。
+</footer>
+
+<script>
+var LANE_COLOR={1:'#ffffff',2:'#222222',3:'#e05b4b',4:'#2b6cb0',5:'#ffd166',6:'#3fb56b'};
+var LANE_TXT={1:'#000',2:'#fff',3:'#fff',4:'#fff',5:'#000',6:'#fff'};
+
+function yen(n){return n.toLocaleString()+'円';}
+
+fetch('tokuyamaManRate.json?_=' + Date.now())
+  .then(function(r){ if(!r.ok) throw new Error('no data'); return r.json(); })
+  .then(function(d){
+    var races = d.races || [];
+    var avgRate = races.length ? races.reduce(function(a,b){return a+b.manRate;},0)/races.length : 0;
+    var maxRate = Math.max.apply(null, races.map(function(r){return r.manRate;}).concat([1]));
+
+    // ---- 特別企画 ----
+    document.getElementById('feature').style.display='block';
+
+    // 時間帯ランキング TOP3
+    var ranked = races.slice().sort(function(a,b){return b.manRate-a.manRate;}).slice(0,3);
+    var rmax = ranked.length? ranked[0].manRate||1 : 1;
+    document.getElementById('rankBody').innerHTML = ranked.map(function(r,i){
+      return '<div class="rank'+(i===0?' top1':'')+'">'+
+        '<div class="pos">'+(i+1)+'</div>'+
+        '<div class="lab">'+r.rno+'R</div>'+
+        '<div class="mini"><i style="width:'+Math.round(r.manRate/rmax*100)+'%"></i></div>'+
+        '<div class="v">'+r.manRate.toFixed(1)+'%</div></div>';
+    }).join('');
+
+    // 堅実 vs 大荒れ
+    if(d.calmRace && d.wildRace){
+      document.getElementById('vsBody').innerHTML =
+        '<div class="col calm"><div class="k">いちばん堅い</div>'+
+          '<div class="r">'+d.calmRace.rno+'R</div>'+
+          '<div class="s">万舟率 '+d.calmRace.manRate.toFixed(1)+'%<br>平均 '+yen(d.calmRace.avgPayout)+'</div></div>'+
+        '<div class="col wild"><div class="k">いちばん荒れる</div>'+
+          '<div class="r">'+d.wildRace.rno+'R</div>'+
+          '<div class="s">万舟率 '+d.wildRace.manRate.toFixed(1)+'%<br>平均 '+yen(d.wildRace.avgPayout)+'</div></div>';
+    }
+
+    // 高配当TOP5
+    document.getElementById('topBody').innerHTML = (d.topPayouts||[]).map(function(p){
+      return '<div class="pay"><div class="amt">'+yen(p.payout)+'</div>'+
+        '<div><span class="combo">'+p.combo+'</span> '+
+        '<span class="meta2">'+p.date+' '+p.rno+'R</span></div></div>';
+    }).join('');
+
+    // 枠別貢献度
+    var lanes = d.laneShare||[];
+    var lmax = Math.max.apply(null, lanes.map(function(l){return l.share;}).concat([1]));
+    document.getElementById('laneBody').innerHTML = lanes.map(function(l){
+      return '<div class="lane">'+
+        '<div class="badge" style="background:'+LANE_COLOR[l.lane]+';color:'+LANE_TXT[l.lane]+'">'+l.lane+'</div>'+
+        '<div class="lbar"><i style="width:'+Math.round(l.share/lmax*100)+'%;background:'+LANE_COLOR[l.lane]+'"></i></div>'+
+        '<div class="lv">'+l.share.toFixed(1)+'% ('+l.count+')</div></div>';
+    }).join('');
+
+    // ---- R別本体 ----
+    document.getElementById('meta').innerHTML =
+      '集計レース数 <b>'+(d.totalRaces||0)+'</b>　/　全体の万舟率 平均 <b>'+avgRate.toFixed(1)+
+      '%</b>　/　しきい値 <b>'+(d.threshold||10000).toLocaleString()+'円超</b>';
+
+    document.getElementById('rows').innerHTML = races.map(function(r){
+      var hi = r.manRate >= avgRate;
+      var w = Math.round(r.manRate / maxRate * 100);
+      return '<div class="row">'+
+        '<div class="head" onclick="this.parentNode.querySelector(&quot;.detail&quot;).classList.toggle(&quot;open&quot;)">'+
+          '<div class="rno">'+r.rno+'R</div>'+
+          '<div class="barwrap"><div class="bar'+(hi?' hi':'')+'" style="width:'+w+'%"></div></div>'+
+          '<div class="rate">'+r.manRate.toFixed(1)+'%</div></div>'+
+        '<div class="detail">集計 <span>'+r.races+'</span> レース中 万舟 <span>'+r.manCount+
+          '</span> 本　/　平均配当 <span>'+yen(r.avgPayout)+'</span>　/　最高配当 <span>'+yen(r.maxPayout)+'</span></div>'+
+        '</div>';
+    }).join('');
+  })
+  .catch(function(){
+    document.getElementById('meta').style.display='none';
+    document.getElementById('rows').innerHTML =
+      '<div class="err">まだデータがありません。GitHub Actions の「update tokuyama payouts」を実行してJSONが生成されると、ここに表示されます。</div>';
+  });
+</script>
+</body>
+</html>
