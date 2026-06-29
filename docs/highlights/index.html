@@ -98,6 +98,10 @@ h1{font-size:22px;font-weight:800;margin-top:4px}
 .bp-row .br i{display:block;height:100%;border-radius:3px}
 .bp-row .vl{font-size:9px;width:34px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
 .bp-uns{font-size:13px;font-weight:800;color:#ff7eb6}
+.daysw{display:flex;align-items:center;gap:6px;margin:10px 0 0}
+.dsw-btn{font-size:12px;font-weight:700;color:var(--sub);background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:5px 13px;cursor:pointer}
+.dsw-btn.on{color:#04121f;background:var(--acc);border-color:var(--acc)}
+.dsw-btn:active{opacity:.7}
 </style>
 </head>
 <body>
@@ -127,6 +131,7 @@ h1{font-size:22px;font-weight:800;margin-top:4px}
   </div>
 </header>
 
+<div class="daysw"><button class="dsw-btn on" data-d="0" onclick="setDay(0)">当日</button><button class="dsw-btn" data-d="1" onclick="setDay(1)">前日</button><button class="dsw-btn" data-d="2" onclick="setDay(2)">前々日</button></div>
 <div class="tabs">
   <div class="tab on" data-v="hot" onclick="sw('hot')">⚡ 波乱注目</div>
   <div class="tab firm" data-v="firm" onclick="sw('firm')">🛡 堅め注目</div>
@@ -274,7 +279,15 @@ document.addEventListener('click',function(e){
   }
 });
 
-fetch('highlights.json?_='+Date.now())
+let SRC='highlights.json';
+var SRCS=['highlights.json','highlights_prev.json','highlights_prev2.json'];
+function setDay(d){
+  SRC=SRCS[d];
+  document.querySelectorAll('.dsw-btn').forEach(function(b){b.classList.toggle('on', (+b.dataset.d)===d);});
+  loadHL();
+}
+function loadHL(){
+fetch(SRC+'?_='+Date.now())
 .then(r=>{if(!r.ok)throw 0;return r.json();})
 .then(doc=>{
   RACES=doc['レース']||[];
@@ -284,7 +297,9 @@ fetch('highlights.json?_='+Date.now())
   document.getElementById('note').innerHTML=`イン1着率は目安値（${conf}は公式実数、他は暫定）。機＝モーター2連率（その節の機力目安で、選手の調子とは別物）。<br>波乱＝外枠A級・当地巧者アウト・イン不安・機力ちぐはぐ等の条件数。買い目・確率・勝者予想は出していません。<br><span style="opacity:.7">生成：${(doc['生成時刻']||'').replace('T',' ').slice(0,16)}</span>`;
   render();
 })
-.catch(()=>{document.getElementById('list').innerHTML='<div class="empty">見どころデータを読み込めませんでした。highlights.json を確認してください。</div>';});
+.catch(()=>{document.getElementById('list').innerHTML='<div class="empty">'+(SRC!=='highlights.json'?'この日の見どころはまだありません（明日以降たまります）。':'見どころデータを読み込めませんでした。highlights.json を確認してください。')+'</div>';});
+}
+loadHL();
 </script>
 </body>
 </html>
