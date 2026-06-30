@@ -159,6 +159,7 @@ def parse_text(lines, agg, stats):
         for pr in players:
             a = agg.setdefault(pr["touban"], {
                 "races": 0, "wins": 0, "mz_den": 0, "mz_sum": 0, "mz_hit": 0,
+                "in1": 0, "y_makuri": 0, "y_sashi": 0, "y_mz": 0,
                 **{c: 0 for c in KIMARITE_COLS},
             })
             if pr["course"] is not None:
@@ -169,6 +170,15 @@ def parse_text(lines, agg, stats):
                     a["mz_sum"] += diff
                     if diff >= 2:
                         a["mz_hit"] += 1
+            # やられ系（1コース進入ベース）：自分が①番手で逃げ切れず、外/内に決められた回数
+            if pr["course"] == 1:
+                a["in1"] += 1
+                if kim == "まくり":
+                    a["y_makuri"] += 1
+                elif kim == "差し":
+                    a["y_sashi"] += 1
+                elif kim == "まくり差し":
+                    a["y_mz"] += 1
             if pr["chaku"] == 1:
                 a["wins"] += 1
                 if kim in KIMARITE_COLS:
@@ -208,7 +218,8 @@ def main():
 
     os.makedirs(os.path.dirname(OUT) or ".", exist_ok=True)
     header = ["登録番号", "集計開始", "集計終了", "出走数", "1着数"] + KIMARITE_COLS + \
-             ["まくり率", "差し率", "前づけ平均", "前づけ率"]
+             ["まくり率", "差し率", "前づけ平均", "前づけ率",
+              "イン進入数", "さされ率", "まくられ率", "まくりさされ率"]
     rows = []
     for tb in sorted(agg.keys()):
         a = agg[tb]
@@ -217,11 +228,16 @@ def main():
         sashi_rate  = round(a["差し"]  / wins * 100, 1) if wins else ""
         mz_avg      = round(a["mz_sum"] / mz_den, 2) if mz_den else ""
         mz_rate     = round(a["mz_hit"] / mz_den * 100, 1) if mz_den else ""
+        in1 = a["in1"]
+        sasare_rate     = round(a["y_sashi"]  / in1 * 100, 1) if in1 else ""
+        makurare_rate   = round(a["y_makuri"] / in1 * 100, 1) if in1 else ""
+        mzsasare_rate   = round(a["y_mz"]     / in1 * 100, 1) if in1 else ""
         rows.append([
             tb, str(start), str(today - timedelta(days=1)),
             a["races"], wins,
             *[a[c] for c in KIMARITE_COLS],
             makuri_rate, sashi_rate, mz_avg, mz_rate,
+            in1, sasare_rate, makurare_rate, mzsasare_rate,
         ])
 
     with open(OUT, "w", encoding="utf-8", newline="") as f:
