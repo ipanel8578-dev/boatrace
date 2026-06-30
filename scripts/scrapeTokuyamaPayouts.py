@@ -13,7 +13,7 @@ import urllib.request
 
 BASE = "http://www1.mbrace.or.jp/od2/K/"
 OUT = os.path.join("docs", "payouts", "tokuyamaPayouts.csv")
-SLEEP = 3.0  # サーバ負荷軽減のため3秒
+SLEEP = 1.0  # サーバ負荷軽減（高速版）
 DAYS_BACK = 365
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) boatrace-data-collector"
@@ -26,14 +26,11 @@ PAYLINE = re.compile(r"\s*(\d{1,2})R\s+(\d)-(\d)-(\d)\s+(\d+)")
 
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    for attempt in range(2):
-        try:
-            with urllib.request.urlopen(req, timeout=20) as r:
-                return r.read()
-        except Exception:
-            if attempt == 0:
-                time.sleep(2.0)
-    return None
+    try:
+        with urllib.request.urlopen(req, timeout=8) as r:
+            return r.read()
+    except Exception:
+        return None
 
 
 def extract_tokuyama(txt):
