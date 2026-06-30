@@ -199,6 +199,12 @@ def main():
         'レース数': len(out_races),
         'レース': out_races
     }
+    # 壁時計（JST）が今日になっている開催日のときだけ当日を書き換える。
+    # 出走表が夜に翌日分へ更新されても、当日タブを前倒しで繰り上げない。
+    today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime('%Y%m%d')
+    if kaisai != today:
+        print(f"SKIP: 開催日{kaisai} != 本日{today}（当日を保持）")
+        return
     import os
     out_dir = os.path.dirname(OUT)
     if out_dir:
