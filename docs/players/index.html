@@ -25,6 +25,7 @@ function App() {
   const [branchF, setBranchF] = useState("ALL");
   const [femaleOnly, setFemaleOnly] = useState(false);
   const [sortKey, setSortKey] = useState("win");
+  const [tab, setTab] = useState("list");
   const [open, setOpen] = useState(null);
   const [kim, setKim] = useState({});
   const [prof, setProf] = useState({});
@@ -64,6 +65,12 @@ function App() {
       }
       return true;
     });
+    if (tab==="makuri" || tab==="sashi") {
+      const rk = tab==="makuri" ? "makuriRate" : "sashiRate";
+      rows = rows.filter(p=>{ const k=kim[p.no]; return k && k.races>=50 && k[rk]!=="" && k[rk]!=null; });
+      rows = [...rows].sort((a,b)=>(+kim[b.no][rk])-(+kim[a.no][rk]));
+      return rows;
+    }
     rows=[...rows].sort((a,b)=>{
       if (sortKey==="out") return (b.out||0)-(a.out||0);
       if (sortKey==="win") return b.win-a.win;
@@ -72,7 +79,7 @@ function App() {
       return 0;
     });
     return rows;
-  }, [q, rankF, branchF, sortKey, femaleOnly]);
+  }, [q, rankF, branchF, sortKey, femaleOnly, tab, kim]);
 
   return (
     <div style={{minHeight:"100vh",padding:"14px 12px 40px",maxWidth:760,margin:"0 auto"}}>
@@ -83,6 +90,11 @@ function App() {
 
       <input placeholder="選手名 / ふりがな / 登番 / 支部で検索..." value={q} onChange={e=>setQ(e.target.value)} style={{width:"100%",padding:"12px 14px",background:"#162232",color:"#e0e6ed",border:"1px solid #1e2d3d",borderRadius:10,fontSize:14,marginBottom:10}}/>
 
+      <div style={{display:"flex",gap:6,marginBottom:10}}>
+        {[["list","一覧"],["makuri","まくり屋"],["sashi","差し屋"]].map(([tv,tl])=>(
+          <button key={tv} onClick={()=>{setTab(tv);setOpen(null);}} style={{flex:1,padding:"9px 0",fontSize:13,fontWeight:800,borderRadius:8,cursor:"pointer",border:"1px solid "+(tab===tv?"#ffd166":"#2a3d52"),background:tab===tv?"#ffd16622":"#162232",color:tab===tv?"#ffd166":"#8faabe"}}>{tl}</button>
+        ))}
+      </div>
       <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
         {["ALL","A1","A2","B1","B2"].map(rk=>(
           <button key={rk} onClick={()=>setRankF(rk)} style={{padding:"7px 16px",fontSize:13,fontWeight:700,borderRadius:8,cursor:"pointer",border:"1px solid "+(rankF===rk?"#ffd166":"#2a3d52"),background:rankF===rk?"#ffd16622":"#162232",color:rankF===rk?"#ffd166":"#8faabe"}}>{rk==="ALL"?"全級":rk}</button>
@@ -94,18 +106,18 @@ function App() {
           <option value="ALL">全支部</option>
           {branches.map(b=><option key={b} value={b}>{b}</option>)}
         </select>
-        <select value={sortKey} onChange={e=>setSortKey(e.target.value)} style={{padding:"7px 10px",background:"#162232",color:"#e0e6ed",border:"1px solid #1e2d3d",borderRadius:8,fontSize:13}}>
+        {tab==="list" && <select value={sortKey} onChange={e=>setSortKey(e.target.value)} style={{padding:"7px 10px",background:"#162232",color:"#e0e6ed",border:"1px solid #1e2d3d",borderRadius:8,fontSize:13}}>
           <option value="win">勝率順</option>
           <option value="c1">イン1着率順</option>
           <option value="out">アウト戦順</option>
           <option value="yusyo">優勝数順</option>
-        </select>
+        </select>}
         <button onClick={()=>setFemaleOnly(v=>!v)} style={{padding:"7px 14px",fontSize:13,fontWeight:700,borderRadius:8,cursor:"pointer",border:"1px solid "+(femaleOnly?"#ff7eb6":"#2a3d52"),background:femaleOnly?"#ff7eb622":"#162232",color:femaleOnly?"#ff7eb6":"#8faabe"}}>♥ 女子</button>
-        <span style={{marginLeft:"auto",fontSize:12,color:"#6b7f95"}}>{filtered.length}名</span>
+        <span style={{marginLeft:"auto",fontSize:12,color:"#6b7f95"}}>{tab!=="list"&&<span style={{color:"#8faabe"}}>出走数50以上・{tab==="makuri"?"まくり":"差し"}率順　</span>}{filtered.length}名</span>
       </div>
 
       <div style={{display:"flex",flexDirection:"column",gap:9}}>
-        {filtered.slice(0,300).map(p=>{
+        {filtered.slice(0,300).map((p,idx)=>{
           const isOpen = open===p.no;
           const k = kim[p.no];
           const pf = prof[p.no];
@@ -113,6 +125,7 @@ function App() {
             <div key={p.no} onClick={()=>setOpen(isOpen?null:p.no)} style={{background:"#0f1923",borderRadius:12,cursor:"pointer",overflow:"hidden",borderLeft:"4px solid "+RANK_LINE[p.rank],boxShadow:"0 1px 3px rgba(0,0,0,.3)"}}>
               {/* 一覧行（旧版踏襲: バッジ＋名前＋右に大きな数字2列） */}
               <div style={{display:"flex",alignItems:"center",padding:"14px 16px",gap:12}}>
+                {tab!=="list" && <span style={{fontSize:15,fontWeight:900,color:"#ffd166",minWidth:26,textAlign:"center",flexShrink:0}}>{idx+1}</span>}
                 <span style={{fontSize:13,fontWeight:800,padding:"4px 9px",borderRadius:8,background:RANK_BADGE[p.rank],color:"#fff",flexShrink:0}}>{p.rank}</span>
                 <div style={{minWidth:0,flex:1}}>
                   {pf&&(pf.tagline||pf.nickname)&&<div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:3}}>
@@ -126,14 +139,17 @@ function App() {
                   {p.kana&&<div style={{fontSize:10,color:"#4a6070",marginTop:1}}>{p.kana}</div>}
                 </div>
                 <div style={{display:"flex",gap:18,flexShrink:0}}>
-                  <div style={{textAlign:"center"}}>
-                    <div style={{fontSize:22,fontWeight:800,color:"#ffd166",lineHeight:1}}>{p.win.toFixed(2)}</div>
-                    <div style={{fontSize:10,color:"#6b7f95",marginTop:3}}>勝率</div>
-                  </div>
-                  <div style={{textAlign:"center"}}>
-                    <div style={{fontSize:22,fontWeight:800,color:"#3fb1c9",lineHeight:1}}>{p.fukusho.toFixed(2)}</div>
-                    <div style={{fontSize:10,color:"#6b7f95",marginTop:3}}>複勝率</div>
-                  </div>
+                  {tab!=="list" && k ? [["率",(tab==="makuri"?k.makuriRate:k.sashiRate)||"-",tab==="makuri"?"#ff9e64":"#7ee787",(tab==="makuri"?"まくり率":"差し率")],["数",tab==="makuri"?k.makuri:k.sashi,"#e0e6ed",(tab==="makuri"?"まくり数":"差し数")]].map(([t,v,col,lb],i)=>(
+                    <div key={i} style={{textAlign:"center"}}>
+                      <div style={{fontSize:22,fontWeight:800,color:col,lineHeight:1}}>{v}{t==="率"&&v!=="-"&&<span style={{fontSize:12}}>%</span>}</div>
+                      <div style={{fontSize:10,color:"#6b7f95",marginTop:3}}>{lb}</div>
+                    </div>
+                  )) : [["勝率",p.win.toFixed(2),"#ffd166"],["複勝率",p.fukusho.toFixed(2),"#3fb1c9"]].map(([lb,v,col],i)=>(
+                    <div key={i} style={{textAlign:"center"}}>
+                      <div style={{fontSize:22,fontWeight:800,color:col,lineHeight:1}}>{v}</div>
+                      <div style={{fontSize:10,color:"#6b7f95",marginTop:3}}>{lb}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
