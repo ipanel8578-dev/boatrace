@@ -5,6 +5,11 @@ on:
     - cron: '20 0 * * *'
     - cron: '20 1 * * *'
   workflow_dispatch:
+    inputs:
+      ym:
+        description: '回収する月 (例 202604)。空欄なら直近12ヶ月ぶん巡回。'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -26,13 +31,13 @@ jobs:
         with:
           python-version: '3.12'
 
-      # scrape は最大300分で打ち切る。打ち切られてもCSVはそこまで保存済み。
       - name: scrape payouts
         continue-on-error: true
         timeout-minutes: 300
+        env:
+          YM: ${{ github.event.inputs.ym }}
         run: python scripts/scrapeTokuyamaPayouts.py
 
-      # scrape が途中で切れても、ここから先は必ず走る
       - name: build man rate json
         if: always()
         run: python scripts/buildTokuyamaManRate.py
