@@ -34,7 +34,13 @@ h1{font-size:22px;font-weight:800;margin-top:4px}
 .b-mid{background:rgba(255,209,102,.14);color:var(--acc);border:1px solid rgba(255,209,102,.35)}
 .b-in{background:var(--panel2);color:var(--sub);border:1px solid var(--line)}
 .boats{margin:11px 0 4px;display:flex;flex-direction:column;gap:4px}
-.boat{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:3px 2px}
+.boat{display:flex;align-items:center;flex-wrap:wrap;gap:7px;row-gap:3px;font-size:12.5px;padding:3px 2px}
+.yk{flex-basis:100%;order:9;font-size:10.5px;color:var(--sub);letter-spacing:.2px;padding-left:1px}
+.yk b{color:var(--txt);font-weight:700}
+.yk1{color:var(--txt)}
+.yk1 .ykl{color:var(--acc);font-weight:800}
+.yklow{opacity:.55}
+.ykn{opacity:.6;font-size:9.5px;margin-left:3px}
 .wk{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0}
 .wk1{background:var(--w1);color:#000}.wk2{background:var(--w2);color:#fff}.wk3{background:var(--w3);color:#fff}.wk4{background:var(--w4);color:#fff}.wk5{background:var(--w5);color:#000}.wk6{background:var(--w6);color:#fff}
 .lv{font-size:10.5px;font-weight:800;padding:1px 5px;border-radius:4px;flex-shrink:0}
@@ -152,6 +158,15 @@ function isJimoto(b, ba){
   const js=JIMOTO[ba]; if(!js) return false;
   return js.includes(b['支部']);
 }
+function ykHTML(b){
+  const s=b['さされ率'], m=b['まくられ率'], mz=b['まくりさされ率'], n=b['イン数'];
+  if(s==null && m==null && mz==null) return '';
+  const pc=v=> (v==null)?'－':(Math.round(v)+'%');
+  const lowN=(typeof n==='number' && n>0 && n<5);
+  const cls='yk'+(b['枠']===1?' yk1':'')+(lowN?' yklow':'');
+  const note=(typeof n==='number' && n>0)?`<span class="ykn">イン${n}走${lowN?'・参考':''}</span>`:'';
+  return `<span class="${cls}"><span class="ykl">やられ</span> さされ <b>${pc(s)}</b>・まくられ <b>${pc(m)}</b>・まくりさされ <b>${pc(mz)}</b>${note}</span>`;
+}
 function boatRow(b, ba){
   let fl=''; if(b['F']) fl+='<span class="flag fF">F</span>'; if(b['鋭ST']) fl+='<span class="flag fST">ST</span>';
   const mc = b['機力評価']==='hi'?' hi':b['機力評価']==='lo'?' lo':'';
@@ -168,6 +183,7 @@ function boatRow(b, ba){
     <span class="mtr${mc}">機${mtxt}</span>
     <span class="stat">全${b['全国勝率'].toFixed(2)}／当${up?'<span class="up">':''}${b['当地勝率']>0?b['当地勝率'].toFixed(2):'－'}${up?'▲</span>':''}</span>
     <span class="bchev">▶</span>
+    ${ykHTML(b)}
   </div><div class="bprof" id="bp-${rid}"></div>`;
 }
 
