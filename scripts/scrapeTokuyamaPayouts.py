@@ -58,8 +58,9 @@ def parse_payout(html, hd):
     if html is None:
         return None
     html = normalize(html)
-    # 別場ページが返ってきた場合を弾く: その日付の徳山リンクが含まれるか
-    if ("jcd=18&hd=" + hd) not in html:
+    # 別場ページが返ってきた場合を弾く: 徳山(jcd=18)のページか
+    # 結果ページのパンくず/ナビに jcd=18 が含まれる。日付一致までは求めない。
+    if "jcd=18" not in html:
         return None
     m = COMBO.search(html)
     if not m:
@@ -125,6 +126,7 @@ def main():
                     candidates.add(d.strftime("%Y%m%d"))
 
     collected = 0
+    dbg = 0
     for hd in sorted(candidates):
         day_hit = 0
         for rno in range(1, 13):
@@ -133,6 +135,15 @@ def main():
                 continue
             html = get("{0}?rno={1}&jcd={2}&hd={3}".format(RESULT, rno, JCD, hd))
             time.sleep(SLEEP)
+            # 最初の8リクエストの状況をログ
+            if dbg < 8:
+                if html is None:
+                    print("DBG hd=%s rno=%d : html=None(取得失敗)" % (hd, rno))
+                else:
+                    has18 = "jcd=18" in html
+                    has3 = "3\u9023\u5358" in html
+                    print("DBG hd=%s rno=%d : len=%d jcd18=%s 3rentan=%s" % (hd, rno, len(html), has18, has3))
+                dbg += 1
             res = parse_payout(html, hd)
             if res is None:
                 # 1R・2Rとも取れなければその候補日は非開催とみなしスキップ
