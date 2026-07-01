@@ -27,6 +27,7 @@ function App() {
   const [open, setOpen] = useState(null);
   const [announcers, setAnnouncers] = useState(null);
   const [gourmet, setGourmet] = useState(null);
+  const [gOpen, setGOpen] = useState(null);
 
   useEffect(() => {
     fetch("../announcers/announcers.json?v=" + Date.now())
@@ -123,7 +124,12 @@ function App() {
                   </div>
                   {gourmet && gourmet[s.name] && (
                   <div style={{marginTop:8,background:"#2a1410",border:"1px solid #5a2f16",borderRadius:8,padding:"8px 10px"}}>
-                    <span style={{color:"#ff9a5a",fontWeight:700}}>🍜 場グルメ</span>
+                    <div onClick={e=>{e.stopPropagation();setGOpen(gOpen===s.code?null:s.code);}} style={{display:"flex",alignItems:"center",cursor:"pointer"}}>
+                      <span style={{color:"#ff9a5a",fontWeight:700}}>🍜 場グルメ</span>
+                      <span style={{marginLeft:8,fontSize:11,color:"#a07050"}}>場内{(gourmet[s.name].in||[]).length}・周辺{(gourmet[s.name].out||[]).length}</span>
+                      <span style={{marginLeft:"auto",fontSize:11,color:"#ff9a5a"}}>{gOpen===s.code?"▲ 閉じる":"▼ 見る"}</span>
+                    </div>
+                    {gOpen===s.code && (<div style={{marginTop:2}}>
                     {gourmet[s.name].in && gourmet[s.name].in.length > 0 && (
                     <div style={{marginTop:6}}>
                       <div style={{fontSize:11,color:"#e0a878",fontWeight:700,marginBottom:3}}>場内メシ</div>
@@ -153,6 +159,7 @@ function App() {
                     <div style={{marginTop:5,fontSize:11,color:"#a07050"}}>
                       価格は{gourmet[s.name].asof || "取得時点"}の目安（時期・メニューで変動）。出典：{gourmet[s.name].src || "公式・現地"}。
                     </div>
+                    </div>)}
                   </div>
                   )}
                   {announcers && ancByVenue(s.name).length > 0 && (
