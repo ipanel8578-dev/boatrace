@@ -64,6 +64,19 @@ h1 span{color:var(--accent)}
 .stat.hi b{color:var(--accent)}
 .st{margin-left:auto}
 
+/* 荒れ指数 */
+.race .ar{width:7px;height:7px;border-radius:50%;margin:3px auto 0}
+.ar-h{background:#e5352b} .ar-m{background:var(--accent)} .ar-l{background:transparent}
+.arare{background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+  padding:10px 12px;margin:0 0 12px}
+.arare .top{display:flex;align-items:center;gap:8px}
+.arare .badge{font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px}
+.badge-h{background:#e5352b;color:#fff} .badge-m{background:var(--accent);color:#12202b}
+.badge-l{background:#2a3947;color:var(--sub)}
+.arare .sc{font-size:12px;color:var(--sub)}
+.arare ul{margin:8px 0 0;padding-left:18px}
+.arare li{font-size:12px;color:var(--txt);margin:2px 0;line-height:1.5}
+.arare .none{font-size:12px;color:var(--sub);margin-top:6px}
 .empty{color:var(--sub);text-align:center;padding:40px 0;font-size:13px}
 .note{color:var(--sub);font-size:11px;margin-top:18px;line-height:1.6}
 </style>
@@ -106,6 +119,10 @@ DATA.forEach(row=>{
 const openJcd = Object.keys(byVenue).sort();
 
 let curJcd = openJcd[0]||null, curRno = 1;
+let ARARE = {};
+fetch("../data/arare.json").then(r=>r.json()).then(d=>{
+  ARARE = d.races||{}; renderRaces(); renderDetail();
+}).catch(()=>{});
 
 function trim(s){ return String(s||"").replace(/\s+/g,""); }
 function num(s){ const v=parseFloat(s); return isNaN(v)?null:v; }
@@ -132,7 +149,9 @@ function renderRaces(){
     b.className="race"+(r===curRno?" on":"");
     if(!boats){ b.style.opacity=.35; b.disabled=true; }
     const dl = boats? trim(G(boats[0],"締切時刻")) : "";
-    b.innerHTML='<div class="n">'+r+'R</div><div class="dl">'+(dl||"&nbsp;")+'</div>';
+    const a = boats? ARARE[curJcd+"_"+r] : null;
+    const dot = a? '<div class="ar ar-'+({高:"h",中:"m",低:"l"}[a.level]||"l")+'"></div>' : '';
+    b.innerHTML='<div class="n">'+r+'R</div><div class="dl">'+(dl||"&nbsp;")+'</div>'+dot;
     if(boats) b.onclick=()=>{curRno=r;renderRaces();renderDetail();};
     el.appendChild(b);
   }
@@ -151,6 +170,24 @@ function renderDetail(){
   head.innerHTML='<div class="title">'+byVenue[curJcd].name+' '+curRno+'R</div>'
     +(dl?'<div class="dl">締切 '+dl+'</div>':'');
   el.appendChild(head);
+
+  const a = ARARE[curJcd+"_"+curRno];
+  if(a){
+    const lv={高:"h",中:"m",低:"l"}[a.level]||"l";
+    const box=document.createElement("div");
+    box.className="arare";
+    let inner='<div class="top">'
+      +'<span class="badge badge-'+lv+'">荒れ指数 '+a.level+'</span>'
+      +'<span class="sc">条件 '+a.score+' / '+8+''
+      +(a.wind!=null?'　風'+a.wind+'m':'')+'</span></div>';
+    if(a.factors&&a.factors.length){
+      inner+='<ul>'+a.factors.map(f=>'<li>'+f+'</li>').join('')+'</ul>';
+    }else{
+      inner+='<div class="none">目立った荒れ条件なし（堅めの目安）。</div>';
+    }
+    box.innerHTML=inner;
+    el.appendChild(box);
+  }
 
   boats.forEach(row=>{
     const wk=trim(G(row,"枠"))||"?";
