@@ -160,7 +160,11 @@ def main():
         inA = in1['級別'] in ('A1', 'A2')
         in_lo = lo(mt[0])
         in_strong = inA and il > ina and il > 0 and not in_lo
-        in_weak = (in1['級別'] in ('B1', 'B2')) or (il > 0 and il < ina) or in_lo
+        # イン天国(it>=60)では当地/機力の見劣り単独で①不安にしない（B級のみ不安）
+        if it >= 60:
+            in_weak = (in1['級別'] in ('B1', 'B2'))
+        else:
+            in_weak = (in1['級別'] in ('B1', 'B2')) or (il > 0 and il < ina) or in_lo
 
         seeds = 0
         if in_weak: seeds += 1
@@ -183,20 +187,25 @@ def main():
         # score(diff)で①中心/難解/外主役のトーンを決め、その上に主役艇名を乗せる。
         o4 = sorted([t for t in threats if t['w'] >= 4], key=lambda x: x['w'])
         inn = sorted([t for t in threats if t['w'] < 4], key=lambda x: x['w'])
+        head_w = None
         if in_strong and diff >= TH_KATA:
             headline = f"①{nm(in1['氏名'])}中心。外の一発をどこまで測るか"
         elif in_weak and diff <= TH_HARAN and o4:
             headline = f"イン薄く外が主役。{K[o4[0]['w']-1]}{o4[0]['nm']}のまくりが本線候補"
+            head_w = o4[0]['w']
         elif in_strong:
             headline = f"①{nm(in1['氏名'])}の逃げが軸。外の一発をどこまで測るか"
         elif in_weak and o4:
             headline = f"①に不安、{K[o4[0]['w']-1]}{o4[0]['nm']}のまくりが主役候補"
+            head_w = o4[0]['w']
         elif in_weak and inn:
             headline = f"①に不安、{K[inn[0]['w']-1]}{inn[0]['nm']}の差しが突け入る一戦"
+            head_w = inn[0]['w']
         elif in_weak:
             headline = "①に不安、外の仕掛け待ちで波乱含み"
         elif o4:
             headline = f"①の出方ひとつ、{K[o4[0]['w']-1]}{o4[0]['nm']}のまくりと連動"
+            head_w = o4[0]['w']
         else:
             headline = "軸を絞りにくい難解戦。展示のSで傾きを見たい"
 
@@ -225,8 +234,14 @@ def main():
         else:
             tenkai.append(f"逃げたい①{nm(in1['氏名'])}は標準評価{('（'+m1+'）') if m1 else ''}。Sが決まれば逃げ、遅れれば外に付け入る隙が生まれる。")
 
-        # 〔主役〕最有力の脅威を決まり手×場特性で言い切る（差別化の核）
-        th2 = sorted(threats, key=lambda t: (t['st'] if t['st'] > 0 else 9, t['w']))[:2]
+        # 〔主役〕見出しの主役艇を先頭に、次点はST順（見出しと展開のズレを防ぐ）
+        th_sorted = sorted(threats, key=lambda t: (t['st'] if t['st'] > 0 else 9, t['w']))
+        if head_w is not None:
+            head_t = [t for t in threats if t['w'] == head_w]
+            rest = [t for t in th_sorted if t['w'] != head_w]
+            th2 = (head_t + rest)[:2]
+        else:
+            th2 = th_sorted[:2]
         toban_by_w = {int(b['枠']): b['登録番号'] for b in bo}
         for idx, t in enumerate(th2):
             role = '外枠のダッシュ勢' if t['w'] >= 4 else '内寄りの一角'
