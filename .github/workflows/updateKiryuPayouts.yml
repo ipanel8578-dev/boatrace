@@ -1,0 +1,53 @@
+name: update kiryu payouts
+
+on:
+  workflow_dispatch:
+    inputs:
+      YM:
+        description: '収集する年月 YYYYMM（空欄で今日から遡る）'
+        required: false
+        default: ''
+  schedule:
+    - cron: '20 15 * * *'   # JST 翌0:20（結果確定後）
+
+permissions:
+  contents: write
+
+concurrency:
+  group: boatrace-kiryu-payouts
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: install deps
+        run: pip install lhafile
+
+      - name: scrape kiryu payouts
+        continue-on-error: true
+        env:
+          YM: ${{ github.event.inputs.YM }}
+        run: python scripts/scrapeKiryuPayouts.py
+
+      - name: build man rate json
+        if: always()
+        run: python scripts/buildKiryuManRate.py
+
+      - name: commit
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/payouts/kiryuPayouts.csv docs/payouts/kiryuManRate.json
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "update kiryu payouts"
+          git pull --rebase origin main
+          git push origin main
