@@ -216,6 +216,7 @@ def main():
         seeds = 0
         if in_weak: seeds += 1
         threats = []; out_hi = False
+        LVRANK = {'A1': 4, 'A2': 3, 'B1': 2, 'B2': 1}
         for i, b in enumerate(bo):
             w = int(b['枠']); lv = b['級別']; loc = f(b['当地勝率']); nat = f(b['全国勝率']); st = f(b['平均ST'])
             a_out = w >= 4 and lv in ('A1', 'A2')
@@ -223,7 +224,8 @@ def main():
             if a_out or local_out:
                 seeds += 1
                 threats.append({'w': w, 'lv': lv, 'st': st, 'a_out': a_out,
-                                'local_out': local_out, 'mhi': hi(mt[i]), 'nm': nm(b['氏名'])})
+                                'local_out': local_out, 'mhi': hi(mt[i]), 'nm': nm(b['氏名']),
+                                'lvr': LVRANK.get(lv, 0), 'loc': loc})
             if w >= 4 and hi(mt[i]): out_hi = True
         if in_lo and out_hi: seeds += 1
         if it >= 60: seeds = max(0, seeds-1)
@@ -294,6 +296,12 @@ def main():
         else:
             th2 = th_sorted[:2]
         toban_by_w = {int(b['枠']): b['登録番号'] for b in bo}
+        # 全艇の格・当地の最上位を把握（格上艇が主役でない理由づけに使う）
+        LVRANK2 = {'A1': 4, 'A2': 3, 'B1': 2, 'B2': 1}
+        boat_meta = {int(b['枠']): {'lvr': LVRANK2.get(b['級別'], 0), 'lv': b['級別'],
+                                    'loc': f(b['当地勝率']), 'nm': nm(b['氏名'])} for b in bo}
+        used_shuyaku = False  # 「主役になりうる」を1レース1回に制限
+        head_w0 = th2[0]['w'] if th2 else None
         for idx, t in enumerate(th2):
             role = '外枠のダッシュ勢' if t['w'] >= 4 else '内寄りの一角'
             ex = []
@@ -303,10 +311,8 @@ def main():
             if t['st'] > 0 and t['st'] <= 0.15: ex.append('鋭ST')
             exs = ('（'+'・'.join(ex)+'）') if ex else ''
             kt = kim_type(toban_by_w.get(t['w'], ''))
-            # 決まり手タイプ×場特性の噛み合い一言＋言い切る決まり手をタイプで決める
             fit = ''
             if t['w'] >= 4:
-                # 外枠の基本はまくりだが、差し型ならまくり差しに寄せる
                 base_kim = 'まくり差し' if kt == 'sashi' else 'まくり'
                 if kt == 'makuri':
                     if ba in NARROW: fit = 'まくり型で狭水面と噛み合い、'
@@ -320,8 +326,33 @@ def main():
                     fit = '差し型が水を得やすく、'
                 elif kt == 'makuri':
                     fit = 'まくり型で一発の破壊力があり、'
-            lead = '主役は' if idx == 0 else 'これに次ぐのが'
-            tenkai.append(f"{lead}{K[t['w']-1]}{t['nm']}{exs}。{fit}Sが決まれば{base_kim}の主役になりうる。")
+            if idx == 0:
+                # 主役：主役述語（1回だけ）
+                tenkai.append(f"主役は{K[t['w']-1]}{t['nm']}{exs}。{fit}Sが決まれば{base_kim}の主役になりうる。")
+                used_shuyaku = True
+            else:
+                # 二番手以下：述語を変える（「主役になりうる」は使わない）
+                pred2 = 'まくり差しから連に食い込む' if t['w'] >= 4 else '差し込みで連に絡む'
+                tenkai.append(f"これに次ぐのが{K[t['w']-1]}{t['nm']}{exs}。{fit}二の矢、{pred2}形。")
+
+        # 修正1：主役より格上・当地上位の艇がいれば、主役でない理由を一言添える
+        if head_w0 is not None:
+            main_meta = boat_meta.get(head_w0, {})
+            # 明確な格上のみ：級が1段以上上、または同格で当地が1.0以上上（僅差では言わない）
+            supers = [w for w, mm in boat_meta.items() if w != head_w0 and w != 1 and (
+                mm['lvr'] > main_meta.get('lvr', 0) or
+                (mm['lvr'] == main_meta.get('lvr', 0) and mm['loc'] > main_meta.get('loc', 0) + 1.0))]
+            # 主役より級が下または同格なら「地力最上位」とは言わない
+            supers = [w for w in supers if boat_meta[w]['lvr'] >= main_meta.get('lvr', 0)]
+            if supers:
+                sw = sorted(supers, key=lambda w: (-boat_meta[w]['lvr'], -boat_meta[w]['loc']))[0]
+                sm = boat_meta[sw]
+                # A級のみ「地力最上位/上位」と表現。非A級は控えめに
+                if sm['lv'] in ('A1', 'A2'):
+                    if sw <= 3:
+                        tenkai.append(f"{K[sw-1]}{sm['nm']}は{sm['lv']}で地力最上位だが、内寄りで一撃の形を作りにくく、Sの決まった主役に主導権を譲る形。")
+                    else:
+                        tenkai.append(f"{K[sw-1]}{sm['nm']}は{sm['lv']}で地力上位だが、進入位置で分があるのは主役側。")
 
         # 〔死角〕必ず1つ（実装テーブルA④：F・級・機力から。同文を避け条件で散らす）
         saten = None
